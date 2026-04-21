@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:invezzte/features/autenticacao/presentation/screens/HomeInvezzte.dart';
+import 'package:invezzte/features/investimento/presentation/investment.dart';
 
 void main() {
   runApp(const InvezzteApp());
@@ -12,8 +12,8 @@ class InvezzteApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Invezzte',
-      theme: ThemeData(primarySwatch: Colors.blue),
-      home: const Homeinvezzte(),
+      theme: ThemeData(fontFamily: 'Poppins', primarySwatch: Colors.blue),
+      home: const Investment(),
       debugShowCheckedModeBanner: false,
     );
   }
