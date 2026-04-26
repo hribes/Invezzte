@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart' hide SearchBar;
 import 'package:invezzte/core/widgets/NavBar.dart';
+import 'package:invezzte/features/gastos/widgets/spending_header.dart';
 
 class Spending extends StatelessWidget {
   const Spending({super.key});
@@ -17,6 +18,7 @@ class Spending extends StatelessWidget {
               //Aqui irei colocar os Widgets
 
               //1. Cabeçalho (SpendingHeader)
+              SpendingHeader(),
               //2. Filtros (SpendingFilterList)
               //3. Data (SpendingDateHeader)
               //4. Transações (SpendingTransactionsList)
