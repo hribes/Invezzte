@@ -2,11 +2,18 @@ import 'package:flutter/material.dart';
 import 'spending_chart.dart';
 
 class SpendingHeader extends StatelessWidget {
-  const SpendingHeader({super.key});
+  final double total;
+  final List<Map<String, dynamic>> transactions;
+
+  const SpendingHeader({
+    super.key,
+    required this.total,
+    required this.transactions,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container( //Espaço roxo
+    return Container(
       padding: const EdgeInsets.fromLTRB(24, 60, 24, 40),
       decoration: const BoxDecoration(
         color: Color(0xFFD1C4FF),
@@ -21,7 +28,7 @@ class SpendingHeader extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                'Gastos', 
+                'Gastos',
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
@@ -34,20 +41,23 @@ class SpendingHeader extends StatelessWidget {
                   const SizedBox(width: 12),
                   _buildHeaderButton(Icons.notifications_none),
                 ],
-              )
+              ),
             ],
           ),
-
-          const SizedBox(height: 60),
-
-          const Center(
-            child: SpendingChart(), 
+          const SizedBox(height: 30),
+          
+          // Gráfico agora recebe os dados para se renderizar sozinho
+          Center(
+            child: SpendingChart(
+              total: total,
+              transactions: transactions,
+            ),
           ),
         ],
       ),
-
     );
   }
+
   Widget _buildHeaderButton(IconData icon) {
     return Container(
       padding: const EdgeInsets.all(10),
@@ -55,12 +65,7 @@ class SpendingHeader extends StatelessWidget {
         color: Color(0xFF9181F4),
         shape: BoxShape.circle,
       ),
-      child: Icon(
-        icon, 
-        color: const Color(0xFFFFD700), 
-        size: 24),
+      child: Icon(icon, color: const Color(0xFFFFD700), size: 24),
     );
   }
 }
-
-
