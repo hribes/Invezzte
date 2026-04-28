@@ -1,19 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart'; 
 
-class NavBar extends StatefulWidget {
+class NavBar extends StatelessWidget {
   const NavBar({super.key});
 
-  @override
-  State<NavBar> createState() => _NavBarState();
-}
+  int _calculateSelectedIndex(BuildContext context) {
+    final String location = GoRouterState.of(context).uri.toString();
 
-class _NavBarState extends State<NavBar> {
-  int _selectedIndex = 0;
+    if (location.startsWith('/home')) return 0;
+    if (location.startsWith('/spending')) return 1;
+    if (location.startsWith('/investment')) return 3;
+    // if (location.startsWith('/add')) return 2;
+    // if (location.startsWith('/charts')) return 3;
+    // if (location.startsWith('/profile')) return 4;
+    
+    return 0; // Padrão
+  }
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+
+
+  void _onItemTapped(int index, BuildContext context) {
+    switch (index) {
+      case 0:
+        context.go('/home');
+        break;
+      case 1:
+        context.go('/spending');
+        break;
+      case 2:
+        
+        // context.go('/add');
+        break;
+      case 3:
+        context.go('/investment');
+        // context.go('/charts');
+        break;
+      case 4:
+        // context.go('/profile');
+        break;
+    }
   }
 
   @override
@@ -36,14 +61,13 @@ class _NavBarState extends State<NavBar> {
         child: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-          selectedItemColor: Color(0xFFFFD583),
+          selectedItemColor: const Color(0xFFFFD583),
           unselectedItemColor: Colors.grey,
-          currentIndex: _selectedIndex,
-          onTap: _onItemTapped,
+          currentIndex: _calculateSelectedIndex(context),
+          onTap: (int index) => _onItemTapped(index, context), 
           elevation: 0,
-          showSelectedLabels: false, // Remove o espaço do texto
+          showSelectedLabels: false,
           showUnselectedLabels: false,
-
           items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.home_outlined, size: 28),
@@ -71,5 +95,3 @@ class _NavBarState extends State<NavBar> {
     );
   }
 }
-
-//Teste de escrita de código para o NavBar, não tem função realldhfakds fhd
