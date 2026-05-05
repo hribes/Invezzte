@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:invezzte/feature/widgets/HeaderScreens.dart';
 import 'spending_chart.dart';
 
 class SpendingHeader extends StatelessWidget {
@@ -24,26 +25,13 @@ class SpendingHeader extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Gastos',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
-              Row(
-                children: [
-                  _buildHeaderButton(Icons.search),
-                  const SizedBox(width: 12),
-                  _buildHeaderButton(Icons.notifications_none),
-                ],
-              ),
-            ],
+
+          Headerscreens(
+            title: 'Gastos',
+            firstIcon: Icons.search,
+            secondIcon: Icons.notifications_none,
           ),
+          
           const SizedBox(height: 30),
           
           // Gráfico agora recebe os dados para se renderizar sozinho

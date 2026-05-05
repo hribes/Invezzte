@@ -40,6 +40,7 @@ class _SpendingState extends State<Spending> {
     final double totalAmount = filteredTransactions.fold(0, (sum, item) => sum + item['amount']);
 
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         top: false,
         child: SingleChildScrollView(
