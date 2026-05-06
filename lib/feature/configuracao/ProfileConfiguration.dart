@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:invezzte/feature/widgets/HeaderScreens.dart';
 import 'package:invezzte/feature/widgets/NavBar.dart';
 
 class ProfileConfiguration extends StatelessWidget {
@@ -7,83 +8,112 @@ class ProfileConfiguration extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: NavBar(),
+      backgroundColor: Colors.white, // O fundo de toda a tela será branco
+      bottomNavigationBar: const NavBar(),
 
-      // AQUI fica o DefaultTextStyle
       body: DefaultTextStyle(
         style: const TextStyle(
           fontFamily: "Poppins",
+          color: Colors.black, // Garante que os textos padrões sejam pretos
         ),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // ==========================================
+              // 1. O BLOCO PADRÃO DO CABEÇALHO (Sem fundo roxo)
+              // ==========================================
+              SafeArea(
+                bottom: false,
+                child: Padding(
+                  // Mantivemos o padding padrão
+                  padding: const EdgeInsets.fromLTRB(24, 20, 24, 10),
+                  child: Headerscreens(
+                    title: 'Meu Perfil',
+                    firstIcon: Icons.search,
+                    secondIcon: Icons.notifications,
+                  ),
+                ),
+              ),
 
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 50),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 16),
-
-                  Text(
-                    'Lucas Hygidio',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w900,
+              // ==========================================
+              // 2. CONTEÚDO DA PÁGINA (PERFIL)
+              // ==========================================
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Lucas Hygidio',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w900,
+                      ),
                     ),
-                  ),
-                  Text(
-                    'lucas.hygidio@gmail.com',
-                    style: TextStyle(
-                      fontSize: 16,
+                    const Text(
+                      'lucas.hygidio@gmail.com',
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
                     ),
-                  ),
 
-                  const SizedBox(height: 40),
+                    const SizedBox(height: 40),
 
-                  _buildItem(
-                    icon: Icons.folder_open,
-                    title: "Editar Informações Pessoais",
-                    subtitle: "Nome, E-mail, Gênero, Salário",
-                  ),
-                  Divider(),
-
-                  _buildItem(
-                    icon: Icons.shield_outlined,
-                    title: "Privacidade",
-                    subtitle: "Termo de Privacidade",
-                  ),
-                  Divider(),
-
-                  _buildItem(
-                    icon: Icons.help_outline,
-                    title: "Ajuda",
-                    subtitle: "Tire suas dúvidas",
-                  ),
-
-                  const SizedBox(height: 200),
-
-                  Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.symmetric(vertical: 16),
-                    decoration: BoxDecoration(
-                      color: Color(0xFFFFE6AC),
-                      borderRadius: BorderRadius.circular(12),
+                    _buildItem(
+                      icon: Icons.folder_open,
+                      title: "Editar Informações Pessoais",
+                      subtitle: "Nome, E-mail, Gênero, Salário",
                     ),
-                    child: const Center(
-                      child: Text(
-                        "SAIR DO APP",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFFFBB718),
+                    const Divider(),
+
+                    
+                    _buildItem(
+                      icon: Icons.assignment_outlined,
+                      title: "Editar Categorias",
+                      subtitle: "Visualize as categorias cadastradas",
+                    ),
+                    const Divider(),
+
+                    _buildItem(
+                      icon: Icons.shield_outlined,
+                      title: "Privacidade",
+                      subtitle: "Termo de Privacidade",
+                    ),
+                    const Divider(),
+
+                    _buildItem(
+                      icon: Icons.help_outline,
+                      title: "Ajuda",
+                      subtitle: "Tire suas dúvidas",
+                    ),
+
+                    const SizedBox(height: 80), 
+
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFFEAC1),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Center(
+                        child: Text(
+                          "SAIR DO APP",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Color(0xFFFFB300),
+                          ),
                         ),
                       ),
                     ),
-                  ),
 
-                  const SizedBox(height: 30),
-                ],
+                    const SizedBox(height: 30),
+                  ],
+                ),
               ),
-            ),
+            ],
           ),
         ),
       ),
@@ -96,10 +126,10 @@ class ProfileConfiguration extends StatelessWidget {
     required String subtitle,
   }) {
     return ListTile(
-      leading: Icon(icon, color: Color(0xFF8C4EFF), size: 30),
-      title: Text(title, style: TextStyle(fontWeight: FontWeight.w600)),
+      leading: Icon(icon, color: const Color(0xFF8C4EFF), size: 30),
+      title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
       subtitle: Text(subtitle),
-      trailing: Icon(Icons.arrow_forward_ios, size: 16),
+      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
       contentPadding: EdgeInsets.zero,
     );
   }

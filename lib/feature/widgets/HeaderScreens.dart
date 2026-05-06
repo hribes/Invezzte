@@ -20,13 +20,13 @@ class Headerscreens extends StatelessWidget {
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
           color: const Color(
-            0xFFB095FF,
-          ).withOpacity(0.2), // Fundo roxinho claro
+            0xFF9173FF,
+          ), // Fundo roxinho claro
           shape: BoxShape.circle,
         ),
         child: Icon(
           icon,
-          color: const Color(0xFF8F64FF), // Sua cor roxa
+          color: const Color(0xFFFFD54F), // Sua cor roxa
           size: 24,
         ),
       ),

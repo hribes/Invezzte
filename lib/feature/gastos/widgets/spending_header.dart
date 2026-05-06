@@ -12,48 +12,42 @@ class SpendingHeader extends StatelessWidget {
     required this.transactions,
   });
 
-  @override
+@override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(24, 60, 24, 40),
+      // Removemos o padding daqui e vamos passar pro SafeArea!
       decoration: const BoxDecoration(
-        color: Color(0xFFD1C4FF),
+        color: Color(0xFFE6E0F8),
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(40),
           bottomRight: Radius.circular(40),
         ),
       ),
-      child: Column(
-        children: [
-
-          Headerscreens(
-            title: 'Gastos',
-            firstIcon: Icons.search,
-            secondIcon: Icons.notifications_none,
+      // Adicionamos o SafeArea e o Padding aqui
+      child: SafeArea(
+        bottom: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 20, 24, 40), // Mesmo top (20) e lateral (24)
+          child: Column(
+            children: [
+              Headerscreens(
+                title: 'Gastos',
+                firstIcon: Icons.search,
+                secondIcon: Icons.notifications,
+              ),
+              
+              const SizedBox(height: 30),
+              
+              Center(
+                child: SpendingChart(
+                  total: total,
+                  transactions: transactions,
+                ),
+              ),
+            ],
           ),
-          
-          const SizedBox(height: 30),
-          
-          // Gráfico agora recebe os dados para se renderizar sozinho
-          Center(
-            child: SpendingChart(
-              total: total,
-              transactions: transactions,
-            ),
-          ),
-        ],
+        ),
       ),
-    );
-  }
-
-  Widget _buildHeaderButton(IconData icon) {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: const BoxDecoration(
-        color: Color(0xFF9181F4),
-        shape: BoxShape.circle,
-      ),
-      child: Icon(icon, color: const Color(0xFFFFD700), size: 24),
     );
   }
 }

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart' hide SearchBar;
+import 'package:invezzte/feature/widgets/HeaderScreens.dart';
 import 'package:invezzte/feature/widgets/NavBar.dart';
 import 'package:invezzte/feature/investimentos/widgets/buildCryptocurrencies.dart';
 import 'package:invezzte/feature/investimentos/widgets/cryptoCard.dart';
 import 'package:invezzte/feature/investimentos/widgets/graphic.dart';
-import 'package:invezzte/feature/investimentos/widgets/notificationButton.dart';
-import 'package:invezzte/feature/investimentos/widgets/searchBar.dart';
 
 class Investment extends StatelessWidget {
   const Investment({super.key});
@@ -12,86 +11,71 @@ class Investment extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // O SingleChildScrollView agora envolve toda a tela
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Bloco Superior Roxo
             Container(
-              padding: EdgeInsets.all(16),
               height: 450,
-              decoration: BoxDecoration(
-                color: Color(0xFFDFD3FE),
+              decoration: const BoxDecoration(
+                color: Color(0xFFE6E0F8),
                 borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(30),
                   bottomRight: Radius.circular(30),
                 ),
               ),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              
+              child: SafeArea(
+                bottom: false, // Só precisamos proteger a parte de cima
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(24, 20, 24, 20),
+                  child: Column(
                     children: [
-                      Align(
+                      // O seu componente genérico de Header
+                      Headerscreens( // Se você usou o nome InvezztePageHeader, troque aqui
+                        title: 'Investimentos', // Troquei de Gastos para Investimentos
+                        firstIcon: Icons.search,
+                        secondIcon: Icons.notifications,
+                      ),
+                      
+                      // Textos de Patrimônio
+                      const Padding(
+                        padding: EdgeInsets.only(top: 10), // Corrigido o EdgeInsets
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text('Total de Patrimônio'),
+                        ),
+                      ),
+                      const Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          'Investimentos',
-                          textAlign: TextAlign.left,
+                          "R\$98.548,11",
                           style: TextStyle(
-                            fontSize: 30,
+                            fontSize: 35,
                             fontWeight: FontWeight.bold,
-                            color: Color.fromARGB(255, 0, 0, 0),
+                            color: Color(0xFF434343),
                           ),
                         ),
                       ),
-                      Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: SearchBar(),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: NotificationButton(),
-                          ),
-                        ],
-                      ),
+                      
+                      // Gráfico
+                      const Padding(
+                        padding: EdgeInsets.only(top: 30), // Corrigido o EdgeInsets
+                        child: Align(child: Graphic()),
+                      )
                     ],
                   ),
-                  Padding(
-                    padding: EdgeInsetsGeometry.directional(top: 10),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text('Total de Patrimônio'),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "R\$98.548,11",
-                      style: TextStyle(
-                        fontSize: 40,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF434343),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsetsGeometry.directional(top: 30),
-                    child: Align(child: Graphic()),
-                  ),
-                ],
+                ),
               ),
             ),
-
+            
             // Lista Horizontal de Categorias
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 10),
+              padding: const EdgeInsets.symmetric(vertical: 10),
               child: SizedBox(
-                height:
-                    40, // Mantém a altura fixa para rolar horizontalmente sem erros
+                height: 40, 
                 child: ListView(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   scrollDirection: Axis.horizontal,
                   children: [
                     Criptomoedas(texto: 'BitCoin', onTap: () {}),
@@ -112,26 +96,10 @@ class Investment extends StatelessWidget {
                 onTap: () {},
               ),
             ),
-
-            // Lista de Ativos usando Spread Operator (...)
-            // ...List.generate(
-            //   10,
-            //   (index) => ListTile(
-            //     leading: CircleAvatar(
-            //       backgroundColor: Color(0xFF885CFB),
-            //       child: Text(
-            //         'A${index + 1}',
-            //         style: TextStyle(color: Colors.white),
-            //       ),
-            //     ),
-            //     title: Text('Ativo ${index + 1}'),
-            //     subtitle: Text('Valor atual: R\$ ${(index + 1) * 100}'),
-            //   ),
-            // ),
           ],
         ),
       ),
-      bottomNavigationBar: NavBar(),
+      bottomNavigationBar: const NavBar(),
     );
   }
 }
