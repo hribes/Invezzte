@@ -26,7 +26,10 @@ class AddOptionsSheet extends StatelessWidget {
             context.push('/add-balance');
           }),
           const Divider(),
-          _buildOption(Icons.assignment_outlined, "Cadastrar Categoria", () {}),
+          _buildOption(Icons.assignment_outlined, "Cadastrar Categoria", () {
+            Navigator.pop(context); 
+            context.push('/create-category');
+          }),
         ],
       ),
     );

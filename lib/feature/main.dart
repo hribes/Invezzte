@@ -7,6 +7,7 @@ import 'package:invezzte/feature/investimentos/investment.dart';
 import 'package:invezzte/feature/gastos/spending.dart';
 import 'package:invezzte/feature/home/HomeInvezzte.dart';
 import 'package:invezzte/feature/login/Login.dart';
+import 'package:invezzte/feature/configuracao/CategoryCreate.dart';
 
 // Configuração das rotas
 final GoRouter _router = GoRouter(
@@ -19,8 +20,9 @@ final GoRouter _router = GoRouter(
     GoRoute(path: '/profile', builder: (context, state) => const ProfileConfiguration()),
     GoRoute(path: '/add-expense', builder: (context, state) => const AddExpense()),
     GoRoute(path: '/add-balance', builder: (context, state) => const AddBalance()),
+    GoRoute(path: '/create-category', builder: (context, state) =>  CategoryCreate()),
   ],
-);
+); 
 
 void main() {
   runApp(const InvezzteApp());
