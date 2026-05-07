@@ -3,9 +3,48 @@ import 'package:invezzte/feature/widgets/FormButton.dart';
 import 'package:invezzte/feature/widgets/HeaderForm.dart';
 import 'package:invezzte/feature/widgets/InputField.dart';
 import 'package:invezzte/feature/widgets/SectionTitle.dart';
+import 'package:invezzte/domain/suporte/Validacoes.dart';
+import 'package:invezzte/domain/suporte/MoedaFormatter.dart';
 
-class RegisterUser extends StatelessWidget {
+class RegisterUser extends StatefulWidget {
   const RegisterUser({super.key});
+
+  @override
+  State<RegisterUser> createState() => _RegisterUserState();
+}
+
+class _RegisterUserState extends State<RegisterUser> {
+  final _formKey = GlobalKey<FormState>();
+
+  final _nomeController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _generoController = TextEditingController();
+  final _salarioController = TextEditingController();
+  final _frequenciaController = TextEditingController();
+  final _dataRecebimentoController = TextEditingController();
+  final _senhaController = TextEditingController();
+  final _confirmaSenhaController = TextEditingController();
+
+  @override
+  void dispose() {
+    _nomeController.dispose();
+    _emailController.dispose();
+    _generoController.dispose();
+    _salarioController.dispose();
+    _frequenciaController.dispose();
+    _dataRecebimentoController.dispose();
+    _senhaController.dispose();
+    _confirmaSenhaController.dispose();
+    super.dispose();
+  }
+
+  void _salvarCadastro() {
+    if (_formKey.currentState!.validate()) {
+      print("Cadastro Validado e Realizado!");
+      // TODO: Enviar para API ou Banco de Dados
+      Navigator.of(context).pop();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,116 +60,140 @@ class RegisterUser extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 24.0),
-        child: Column(
-          crossAxisAlignment:
-              CrossAxisAlignment.start, // Alinha textos descritivos à esquerda
-          children: [
-            const Headerform(title: "Faça seu Cadastro!"),
-            const SizedBox(height: 10),
-            const Text(
-              "Cadastre-se em nosso app para acompanhar de perto suas finanças.",
-              style: TextStyle(color: Colors.grey, fontSize: 14),
-            ),
-            const SizedBox(height: 30),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Headerform(title: "Faça seu Cadastro!"),
+              const SizedBox(height: 10),
+              const Text(
+                "Cadastre-se em nosso app para acompanhar de perto suas finanças.",
+                style: TextStyle(color: Colors.grey, fontSize: 14),
+              ),
+              const SizedBox(height: 30),
 
-            // --- SEÇÃO: DADOS PESSOAIS ---
-            const Align(
-              alignment: Alignment.centerLeft,
-              child: SectionTitle(title: "Dados Pessoais"),
-            ),
-            const SizedBox(height: 20),
+              const Align(
+                alignment: Alignment.centerLeft,
+                child: SectionTitle(title: "Dados Pessoais"),
+              ),
+              const SizedBox(height: 20),
 
-            const Inputfield(
-              label: "Nome Completo",
-              hintText: "Digite seu nome completo...",
-              prefixIcon: Icons.person_outline,
-            ),
-            const SizedBox(height: 15),
+              InputField(
+                label: "Nome Completo",
+                hintText: "Digite seu nome completo...",
+                prefixIcon: Icons.person_outline,
+                controller: _nomeController,
+                validator: Validacoes.nomeCompleto,
+              ),
+              const SizedBox(height: 15),
 
-            const Inputfield(
-              label: "E-mail",
-              hintText: "Ex: email@gmail.com",
-              prefixIcon: Icons.email_outlined,
-            ),
-            const SizedBox(height: 15),
+              InputField(
+                label: "E-mail",
+                hintText: "Ex: email@gmail.com",
+                prefixIcon: Icons.email_outlined,
+                controller: _emailController,
+                keyboardType: TextInputType.emailAddress,
+                validator: Validacoes.email,
+              ),
+              const SizedBox(height: 15),
 
-            const Inputfield(
-              label: "Gênero",
-              hintText: "Prefiro não informar...",
-              prefixIcon: Icons.wc_outlined,
-              isDropdown: true,
-            ),
+              InputField(
+                label: "Gênero",
+                hintText: "Prefiro não informar...",
+                prefixIcon: Icons.wc_outlined,
+                isDropdown: true,
+                controller: _generoController,
+                onTap: () {
+                  // Aqui futuramente você pode abrir um BottomSheet para selecionar
+                  _generoController.text = "Masculino"; // Exemplo
+                },
+              ),
 
-            const SizedBox(height: 30),
+              const SizedBox(height: 30),
 
-            // --- SEÇÃO: RENDA ---
-            const Align(
-              alignment: Alignment.centerLeft,
-              child: SectionTitle(title: "Adicione sua Renda"),
-            ),
-            const SizedBox(height: 20),
+              const Align(
+                alignment: Alignment.centerLeft,
+                child: SectionTitle(title: "Adicione sua Renda"),
+              ),
+              const SizedBox(height: 20),
 
-            const Inputfield(
-              label: "Salário",
-              hintText: "Ex: R\$1.900,00",
-              prefixIcon: Icons.monetization_on_outlined,
-            ),
-            const SizedBox(height: 15),
+              InputField(
+                label: "Salário",
+                hintText: "Ex: 1.900,00",
+                prefixIcon: Icons.monetization_on_outlined,
+                controller: _salarioController,
+                keyboardType: TextInputType.number,
+                inputFormatters: [MoedaFormatter()],
+                validator: (val) =>
+                    Validacoes.obrigatorio(val, campo: 'O salário'),
+              ),
+              const SizedBox(height: 15),
 
-            // Linha com dois campos lado a lado
-            Row(
-              children: [
-                Expanded(
-                  child: const Inputfield(
-                    label: "Frequência",
-                    hintText: "Mensal",
-                    isDropdown: true,
-                    // Se o seu Inputfield não tiver ícone, ele deve lidar com o null
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: InputField(
+                      label: "Frequência",
+                      hintText: "Mensal",
+                      isDropdown: true,
+                      controller: _frequenciaController,
+                      onTap: () => _frequenciaController.text = "Mensal",
+                    ),
                   ),
-                ),
-                const SizedBox(width: 15),
-                Expanded(
-                  child: const Inputfield(
-                    label: "Dt. recebimento",
-                    hintText: "01/05/2026",
-                    isDropdown: true,
+                  const SizedBox(width: 15),
+                  Expanded(
+                    child: InputField(
+                      label: "Dt. recebimento",
+                      hintText: "01/05/2026",
+                      isDropdown: true,
+                      controller: _dataRecebimentoController,
+                      onTap: () =>
+                          _dataRecebimentoController.text = "05/05/2026",
+                    ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
 
-            const SizedBox(height: 30),
+              const SizedBox(height: 30),
 
-            // --- SEÇÃO: SEGURANÇA ---
-            const Align(
-              alignment: Alignment.centerLeft,
-              child: SectionTitle(title: "Segurança"),
-            ),
-            const SizedBox(height: 20),
+              const Align(
+                alignment: Alignment.centerLeft,
+                child: SectionTitle(title: "Segurança"),
+              ),
+              const SizedBox(height: 20),
 
-            const Inputfield(
-              label: "Digite sua senha",
-              hintText: "Sua senha precisa conter 6 caracteres",
-              prefixIcon: Icons.lock_outline,
-            ),
-            const SizedBox(height: 15),
+              InputField(
+                label: "Digite sua senha",
+                hintText: "Mínimo 8 caracteres (1 maiúscula, 1 número)",
+                prefixIcon: Icons.lock_outline,
+                controller: _senhaController,
+                obscureText: true,
+                validator: Validacoes.senha,
+              ),
+              const SizedBox(height: 15),
 
-            const Inputfield(
-              label: "Confirme sua senha",
-              hintText: "Precisa ser igual",
-              prefixIcon: Icons.lock_outline,
-            ),
+              InputField(
+                label: "Confirme sua senha",
+                hintText: "Precisa ser igual",
+                prefixIcon: Icons.lock_outline,
+                controller: _confirmaSenhaController,
+                obscureText: true,
+                // Passa o texto atual do controller de senha para a função validadora
+                validator: (val) =>
+                    Validacoes.confirmarSenha(_senhaController.text)(val),
+              ),
 
-            const SizedBox(height: 40),
+              const SizedBox(height: 40),
 
-            FormButton(
-              onSave: () {
-                print("Cadastro realizado!");
-              },
-              onCancel: () => Navigator.of(context).pop(),
-            ),
-            const SizedBox(height: 30),
-          ],
+              FormButton(
+                onSave: _salvarCadastro,
+                onCancel: () => Navigator.of(context).pop(),
+              ),
+              const SizedBox(height: 30),
+            ],
+          ),
         ),
       ),
     );

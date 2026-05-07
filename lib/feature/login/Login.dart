@@ -2,8 +2,37 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:invezzte/feature/widgets/InputField.dart';
 
-class Login extends StatelessWidget {
+class Login extends StatefulWidget {
   const Login({super.key});
+
+  @override
+  State<Login> createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
+  // Chave global para identificar e validar o formulário
+  final _formKey = GlobalKey<FormState>();
+
+  // Controladores para capturar os textos digitados
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    // É importante descartar os controllers para evitar vazamento de memória
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  void _realizarLogin() {
+    // Aciona as funções 'validator' de todos os TextFormFields do formulário
+    if (_formKey.currentState!.validate()) {
+      // Se passou na validação, podemos acessar os dados e logar
+      // Exemplo: final email = _emailController.text;
+      context.go('/home');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +62,6 @@ class Login extends StatelessWidget {
                 Center(
                   child: Column(
                     children: [
-                      // Carregamento da Logo
                       Image.asset(
                         'assets/images/logo.png',
                         width: 100,
@@ -56,7 +84,7 @@ class Login extends StatelessWidget {
                 const Text(
                   "Bem-Vindo!",
                   style: TextStyle(
-                    color: Color(0xFFFFD700), // Amarelo/Dourado
+                    color: Color(0xFFFFD700),
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
                   ),
@@ -95,75 +123,99 @@ class Login extends StatelessWidget {
                 ),
               ),
               child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Inputfield(
-                      label: "E-mail",
-                      hintText: "lucas.hygidio@gmail.com",
-                      prefixIcon: Icons.email_outlined,
-                    ),
-                    const SizedBox(height: 20),
-                    const Inputfield(
-                      label: "Senha",
-                      hintText: "**************",
-                      prefixIcon: Icons.lock_outline,
-                    ),
-                    const SizedBox(height: 40),
-
-                    // Botão ENTRAR
-                    SizedBox(
-                      width: double.infinity,
-                      height: 55,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(
-                            0xFFFFE5A5,
-                          ), // Amarelo claro
-                          foregroundColor: const Color(
-                            0xFFFBB016,
-                          ), // Texto laranja/ouro
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                        ),
-                        onPressed: () {
-                          context.go('/home');
+                // O Widget Form engloba todos os campos
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      InputField(
+                        label: "E-mail",
+                        hintText: "lucas.hygidio@gmail.com",
+                        prefixIcon: Icons.email_outlined,
+                        controller: _emailController,
+                        keyboardType: TextInputType.emailAddress,
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return 'O e-mail é obrigatório';
+                          }
+                          // Regex simples para validação de e-mail
+                          if (!RegExp(
+                            r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                          ).hasMatch(value)) {
+                            return 'Insira um e-mail válido';
+                          }
+                          return null; // Retornar null significa que está válido
                         },
-                        child: const Text(
-                          "ENTRAR",
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
                       ),
-                    ),
+                      const SizedBox(height: 20),
+                      InputField(
+                        label: "Senha",
+                        hintText: "**************",
+                        prefixIcon: Icons.lock_outline,
+                        controller: _passwordController,
+                        obscureText: true, // Oculta os caracteres
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'A senha é obrigatória';
+                          }
+                          if (value.length < 6) {
+                            return 'A senha deve ter pelo menos 6 caracteres';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 40),
 
-                    const SizedBox(height: 20),
-
-                    // Link para Cadastro
-                    Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text("Não possui conta? "),
-                          GestureDetector(
-                            onTap: () => context.push('/register-user'),
-                            child: const Text(
-                              "Clique aqui!",
-                              style: TextStyle(
-                                color: Color(0xFF8F64FF),
-                                fontWeight: FontWeight.bold,
-                                decoration: TextDecoration.underline,
-                              ),
+                      // Botão ENTRAR
+                      SizedBox(
+                        width: double.infinity,
+                        height: 55,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFFFE5A5),
+                            foregroundColor: const Color(0xFFFBB016),
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
                             ),
                           ),
-                        ],
+                          onPressed:
+                              _realizarLogin, // Chama a função de validação
+                          child: const Text(
+                            "ENTRAR",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
+
+                      const SizedBox(height: 20),
+
+                      // Link para Cadastro
+                      Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text("Não possui conta? "),
+                            GestureDetector(
+                              onTap: () => context.push('/register-user'),
+                              child: const Text(
+                                "Clique aqui!",
+                                style: TextStyle(
+                                  color: Color(0xFF8F64FF),
+                                  fontWeight: FontWeight.bold,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
