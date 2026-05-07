@@ -6,11 +6,13 @@ import 'package:invezzte/feature/configuracao/ProfileConfiguration.dart';
 import 'package:invezzte/feature/investimentos/investment.dart';
 import 'package:invezzte/feature/gastos/spending.dart';
 import 'package:invezzte/feature/home/HomeInvezzte.dart';
+import 'package:invezzte/feature/login/Login.dart';
 
 // Configuração das rotas
 final GoRouter _router = GoRouter(
-  initialLocation: '/home',
+  initialLocation: '/login',
   routes: [
+    GoRoute(path: '/login', builder: (context, state) => const Login()),    
     GoRoute(path: '/home', builder: (context, state) => const Homeinvezzte()),
     GoRoute(path: '/spending', builder: (context, state) => const Spending()),
     GoRoute(path: '/investment', builder: (context, state) => const Investment()),
