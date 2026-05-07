@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class SpendingDateHeader extends StatelessWidget {
   final DateTime selectedDate;
-  final ValueChanged<DateTime> onDateChanged; // Função callback
+  final ValueChanged<DateTime> onDateChanged; 
 
   const SpendingDateHeader({
     super.key,
@@ -53,7 +53,6 @@ class SpendingDateHeader extends StatelessWidget {
     );
 
     if (picked != null && picked != selectedDate) {
-      // Em vez de setState, executa a função que o Cérebro passou
       onDateChanged(picked); 
     }
   }

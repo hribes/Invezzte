@@ -49,7 +49,6 @@ class InputField extends StatelessWidget {
           obscureText: obscureText,
           keyboardType: keyboardType,
           inputFormatters: inputFormatters,
-          // Se for dropdown ou tiver onTap, bloqueamos a digitação do teclado
           readOnly: readOnly || isDropdown || onTap != null,
           onTap: onTap,
           decoration: InputDecoration(
@@ -57,7 +56,6 @@ class InputField extends StatelessWidget {
             prefixIcon: prefixIcon != null
                 ? Icon(prefixIcon, color: const Color(0xFF8F64FF))
                 : null,
-            // Adiciona a setinha se for dropdown
             suffixIcon: isDropdown
                 ? const Icon(Icons.arrow_drop_down, color: Colors.grey)
                 : null,

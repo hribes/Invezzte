@@ -13,10 +13,8 @@ class History extends StatefulWidget {
 }
 
 class _HistoryState extends State<History> {
-  // Controle de qual categoria está selecionada (começa no 0, que é "Casa")
-  int _selectedCategoryIndex = 0;
 
-  // Lista com os dados das categorias
+  int _selectedCategoryIndex = 0;
   final List<CategoryItem> _categories = [
     CategoryItem(title: "Casa", icon: Icons.home),
     CategoryItem(title: "Transporte", icon: Icons.directions_bus),
@@ -26,11 +24,11 @@ class _HistoryState extends State<History> {
 
   @override
   Widget build(BuildContext context) {
-    // Pega o nome da categoria selecionada para usar no título da lista
+
     String currentCategoryName = _categories[_selectedCategoryIndex].title;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFFAFAFA), // Fundo levemente acinzentado do seu print
+      backgroundColor: const Color(0xFFFAFAFA), 
       bottomNavigationBar: const NavBar(),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -38,19 +36,17 @@ class _HistoryState extends State<History> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 1. O HEADER GENÉRICO
+
               Headerscreens(
                 title: 'Histórico',
                 firstIcon: Icons.search,
               ),
               const SizedBox(height: 30),
-
-              // 2. O COMPONENTE DE CATEGORIAS
               CategorySelector(
                 categories: _categories,
                 selectedIndex: _selectedCategoryIndex,
                 onCategorySelected: (index) {
-                  // Atualiza a tela quando o usuário clica em outra categoria
+              
                   setState(() {
                     _selectedCategoryIndex = index;
                   });
@@ -58,12 +54,11 @@ class _HistoryState extends State<History> {
               ),
               const SizedBox(height: 30),
 
-              // 3. TÍTULO DA SEÇÃO E DATA
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    currentCategoryName, // O nome muda sozinho ao clicar lá em cima!
+                    currentCategoryName, 
                     style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -92,7 +87,6 @@ class _HistoryState extends State<History> {
               ),
               const SizedBox(height: 16),
 
-              // 4. A LISTA DE TRANSAÇÕES (Usando o componente inteligente)
               InfoCard(
                 title: 'Amazon Prime',
                 date: '20 de Março de 2026',
@@ -122,7 +116,7 @@ class _HistoryState extends State<History> {
                 type: TransactionType.saida,
               ),
               
-              const SizedBox(height: 20), // Respiro final para não colar na NavBar
+              const SizedBox(height: 20), 
             ],
           ),
         ),

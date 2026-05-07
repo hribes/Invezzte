@@ -15,7 +15,6 @@ class SpendingHeader extends StatelessWidget {
 @override
   Widget build(BuildContext context) {
     return Container(
-      // Removemos o padding daqui e vamos passar pro SafeArea!
       decoration: const BoxDecoration(
         color: Color(0xFFE6E0F8),
         borderRadius: BorderRadius.only(
@@ -23,11 +22,11 @@ class SpendingHeader extends StatelessWidget {
           bottomRight: Radius.circular(40),
         ),
       ),
-      // Adicionamos o SafeArea e o Padding aqui
+
       child: SafeArea(
         bottom: false,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(24, 20, 24, 40), // Mesmo top (20) e lateral (24)
+          padding: const EdgeInsets.fromLTRB(24, 20, 24, 40), 
           child: Column(
             children: [
               Headerscreens(

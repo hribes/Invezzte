@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:invezzte/domain/category.dart';
 import 'package:invezzte/feature/cadastros/AddBalance.dart';
 import 'package:invezzte/feature/cadastros/AddExpense.dart';
 import 'package:invezzte/feature/configuracao/ProfileConfiguration.dart';
+import 'package:invezzte/feature/historico/History.dart';
 import 'package:invezzte/feature/investimentos/investment.dart';
 import 'package:invezzte/feature/gastos/spending.dart';
 import 'package:invezzte/feature/home/HomeInvezzte.dart';
 import 'package:invezzte/feature/login/Login.dart';
 import 'package:invezzte/feature/configuracao/CategoryCreate.dart';
 import 'package:invezzte/feature/cadastros/RegisterUser.dart';
+import 'package:invezzte/feature/configuracao/Category.dart';
 
 // Configuração das rotas
 final GoRouter _router = GoRouter(
@@ -23,11 +26,13 @@ final GoRouter _router = GoRouter(
     GoRoute(path: '/add-balance', builder: (context, state) => const AddBalance()),
     GoRoute(path: '/create-category', builder: (context, state) =>  CategoryCreate()),
     GoRoute(path: '/register-user', builder: (context, state) => const RegisterUser()),
+    GoRoute(path: '/history', builder: (context, state) => const History()),
+    GoRoute(path: '/category', builder: (context, state) => const Categories()),
   ],
 ); 
 
-void main() {
-  runApp(const InvezzteApp());
+  void main() {
+    runApp(const InvezzteApp());
 }
 
 class InvezzteApp extends StatelessWidget {

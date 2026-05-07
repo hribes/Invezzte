@@ -10,26 +10,23 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  // Chave global para identificar e validar o formulário
   final _formKey = GlobalKey<FormState>();
 
-  // Controladores para capturar os textos digitados
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
   @override
   void dispose() {
-    // É importante descartar os controllers para evitar vazamento de memória
+
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
   void _realizarLogin() {
-    // Aciona as funções 'validator' de todos os TextFormFields do formulário
+
     if (_formKey.currentState!.validate()) {
-      // Se passou na validação, podemos acessar os dados e logar
-      // Exemplo: final email = _emailController.text;
+
       context.go('/home');
     }
   }
@@ -39,7 +36,6 @@ class _LoginState extends State<Login> {
     return Scaffold(
       body: Stack(
         children: [
-          // 1. Imagem de Fundo com Overlay Roxo
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
@@ -54,7 +50,6 @@ class _LoginState extends State<Login> {
             ),
           ),
 
-          // 2. Conteúdo Superior (Logo e Texto)
           SafeArea(
             child: Column(
               children: [
@@ -109,7 +104,6 @@ class _LoginState extends State<Login> {
             ),
           ),
 
-          // 3. Formulário Branco Inferior
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
@@ -123,7 +117,6 @@ class _LoginState extends State<Login> {
                 ),
               ),
               child: SingleChildScrollView(
-                // O Widget Form engloba todos os campos
                 child: Form(
                   key: _formKey,
                   child: Column(
@@ -139,13 +132,13 @@ class _LoginState extends State<Login> {
                           if (value == null || value.trim().isEmpty) {
                             return 'O e-mail é obrigatório';
                           }
-                          // Regex simples para validação de e-mail
+
                           if (!RegExp(
                             r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
                           ).hasMatch(value)) {
                             return 'Insira um e-mail válido';
                           }
-                          return null; // Retornar null significa que está válido
+                          return null; 
                         },
                       ),
                       const SizedBox(height: 20),
@@ -154,7 +147,7 @@ class _LoginState extends State<Login> {
                         hintText: "**************",
                         prefixIcon: Icons.lock_outline,
                         controller: _passwordController,
-                        obscureText: true, // Oculta os caracteres
+                        obscureText: true,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'A senha é obrigatória';
@@ -167,7 +160,6 @@ class _LoginState extends State<Login> {
                       ),
                       const SizedBox(height: 40),
 
-                      // Botão ENTRAR
                       SizedBox(
                         width: double.infinity,
                         height: 55,
@@ -181,7 +173,7 @@ class _LoginState extends State<Login> {
                             ),
                           ),
                           onPressed:
-                              _realizarLogin, // Chama a função de validação
+                              _realizarLogin, 
                           child: const Text(
                             "ENTRAR",
                             style: TextStyle(
@@ -194,7 +186,6 @@ class _LoginState extends State<Login> {
 
                       const SizedBox(height: 20),
 
-                      // Link para Cadastro
                       Center(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,

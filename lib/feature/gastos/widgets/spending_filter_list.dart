@@ -25,7 +25,6 @@ class SpendingFilterList extends StatelessWidget {
 
           return GestureDetector(
             onTap: () {
-              // Avisa a tela principal qual filtro foi clicado
               onCategoryChanged(filters[index]);
             },
             child: Container(

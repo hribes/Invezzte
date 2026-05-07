@@ -22,13 +22,13 @@ class SpendingTransactionsList extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
         children: transactions.map((tx) {
-          // Extraindo a data para formatar na tela
+
           final DateTime date = tx['date'];
           final String formattedDate = "${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}";
 
           return SpendingTransactionCard(
             icon: tx['icon'],
-            iconColor: const Color(0xFF9181F4), // Pode vir do mapa tx se preferir
+            iconColor: const Color(0xFF9181F4),
             title: tx['title'],
             dueDate: formattedDate,
             amount: 'R\$${tx['amount'].toStringAsFixed(2).replaceAll('.', ',')}',

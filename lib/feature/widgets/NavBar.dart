@@ -52,7 +52,6 @@ class NavBar extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(50, 0, 50, 20),
       child: Container(
-        // Mantém a sua decoração original (sombras, cor branca, cantos arredondados)
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(50),
           color: Colors.white,
@@ -88,7 +87,6 @@ class NavBar extends StatelessWidget {
     return GestureDetector(
       onTap: () => _onItemTapped(index, context),
       child: Container(
-        // Container invisível para aumentar a área de toque (fica mais fácil de clicar)
         color: Colors.transparent,
         padding: const EdgeInsets.all(12),
         // O Ícone
@@ -101,7 +99,6 @@ class NavBar extends StatelessWidget {
     );
   }
 
-  // Função auxiliar específica para o botão do meio (roxa)
   Widget _buildCenterAddButton(BuildContext context) {
     return GestureDetector(
       onTap: () => _onItemTapped(2, context),
@@ -111,7 +108,7 @@ class NavBar extends StatelessWidget {
         child: const Icon(
           Icons.add_circle,
           size: 32,
-          color: Color(0xFF8F64FF), // Sua cor roxa original
+          color: Color(0xFF8F64FF),
         ),
       ),
     );

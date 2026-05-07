@@ -36,13 +36,12 @@ class CategorySelector extends StatelessWidget {
                 width: 75,
                 height: 75,
                 decoration: BoxDecoration(
-                  // Fundo amarelinho se selecionado, cinza se não
                   color: isSelected ? const Color(0xFFFFEAC1) : const Color(0xFFF0F0F0),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Icon(
                   category.icon, 
-                  color: const Color(0xFFFFB300), // Ícone sempre amarelo/laranja
+                  color: const Color(0xFFFFB300),
                   size: 32,
                 ),
               ),

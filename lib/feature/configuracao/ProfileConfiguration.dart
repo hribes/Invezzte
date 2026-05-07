@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:invezzte/feature/widgets/HeaderScreens.dart';
 import 'package:invezzte/feature/widgets/NavBar.dart';
+import 'package:go_router/go_router.dart';
 
 class ProfileConfiguration extends StatelessWidget {
   const ProfileConfiguration({super.key});
@@ -8,21 +9,19 @@ class ProfileConfiguration extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // O fundo de toda a tela será branco
+      backgroundColor: Colors.white, 
       bottomNavigationBar: const NavBar(),
 
       body: DefaultTextStyle(
         style: const TextStyle(
           fontFamily: "Poppins",
-          color: Colors.black, // Garante que os textos padrões sejam pretos
+          color: Colors.black, 
         ),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // ==========================================
-              // 1. O BLOCO PADRÃO DO CABEÇALHO (Sem fundo roxo)
-              // ==========================================
+
               SafeArea(
                 bottom: false,
                 child: Padding(
@@ -36,9 +35,6 @@ class ProfileConfiguration extends StatelessWidget {
                 ),
               ),
 
-              // ==========================================
-              // 2. CONTEÚDO DA PÁGINA (PERFIL)
-              // ==========================================
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
                 child: Column(
@@ -72,6 +68,9 @@ class ProfileConfiguration extends StatelessWidget {
                       icon: Icons.assignment_outlined,
                       title: "Editar Categorias",
                       subtitle: "Visualize as categorias cadastradas",
+                      onTap: () {
+                        context.push('/category');
+                      },
                     ),
                     const Divider(),
 
@@ -124,8 +123,10 @@ class ProfileConfiguration extends StatelessWidget {
     required IconData icon,
     required String title,
     required String subtitle,
+    VoidCallback? onTap
   }) {
     return ListTile(
+      onTap: onTap,
       leading: Icon(icon, color: const Color(0xFF8C4EFF), size: 30),
       title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
       subtitle: Text(subtitle),

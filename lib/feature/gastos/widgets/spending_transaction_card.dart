@@ -20,7 +20,7 @@ class SpendingTransactionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 12), // Espaço entre os cartões
+      margin: const EdgeInsets.only(bottom: 12), 
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -35,12 +35,10 @@ class SpendingTransactionCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // 1. Ícone
           Icon(icon, color: iconColor, size: 28),
           const SizedBox(width: 16),
           
-          // 2. Textos (Empilhados com Column)
-          Expanded( // O Expanded empurra o valor em R$ para a ponta direita
+          Expanded( 
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -64,7 +62,6 @@ class SpendingTransactionCard extends StatelessWidget {
             ),
           ),
           
-          // 3. Valor
           Text(
             amount,
             style: const TextStyle(

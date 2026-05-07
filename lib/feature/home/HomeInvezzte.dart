@@ -57,7 +57,7 @@ class _HomeinvezzteState extends State<Homeinvezzte> {
               HomeHistoryCategories(
                 categorias: _categoriasHistorico,
 
-                onVerTudoPressed: () => context.push('/historico_completo'),
+                onVerTudoPressed: () => context.push('/history'),
                 onCategoriaPressed: (String categoria) {
                   context.push('/historico_categoria/$categoria');
                 },

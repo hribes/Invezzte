@@ -41,7 +41,6 @@ class _RegisterUserState extends State<RegisterUser> {
   void _salvarCadastro() {
     if (_formKey.currentState!.validate()) {
       print("Cadastro Validado e Realizado!");
-      // TODO: Enviar para API ou Banco de Dados
       Navigator.of(context).pop();
     }
   }
@@ -105,7 +104,7 @@ class _RegisterUserState extends State<RegisterUser> {
                 isDropdown: true,
                 controller: _generoController,
                 onTap: () {
-                  // Aqui futuramente você pode abrir um BottomSheet para selecionar
+        
                   _generoController.text = "Masculino"; // Exemplo
                 },
               ),
@@ -180,7 +179,6 @@ class _RegisterUserState extends State<RegisterUser> {
                 prefixIcon: Icons.lock_outline,
                 controller: _confirmaSenhaController,
                 obscureText: true,
-                // Passa o texto atual do controller de senha para a função validadora
                 validator: (val) =>
                     Validacoes.confirmarSenha(_senhaController.text)(val),
               ),

@@ -33,9 +33,9 @@ class CategoryCreate extends StatelessWidget {
               const SizedBox(height: 20),
               GridView.builder(
                 shrinkWrap:
-                    true, // Importante para o modal não ocupar a tela toda
+                    true, 
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4, // 4 ícones por linha
+                  crossAxisCount: 4, 
                   mainAxisSpacing: 10,
                   crossAxisSpacing: 10,
                 ),
@@ -43,7 +43,6 @@ class CategoryCreate extends StatelessWidget {
                 itemBuilder: (context, index) {
                   return InkWell(
                     onTap: () {
-                      // Aqui você salvaria o ícone selecionado
                       Navigator.pop(context);
                     },
                     child: Container(
@@ -93,7 +92,6 @@ class CategoryCreate extends StatelessWidget {
             ),
             const SizedBox(height: 50),
 
-            // Círculo com o ícone de casa
             GestureDetector(
               onTap: () => _abrirSeletorDeIcones(context),
               child: Container(
@@ -105,7 +103,7 @@ class CategoryCreate extends StatelessWidget {
                 ),
                 child: const Icon(
                   Icons
-                      .home, // Aqui depois você usará uma variável para mudar o ícone
+                      .home,
                   size: 60,
                   color: Color(0xFFFFCA66),
                 ),

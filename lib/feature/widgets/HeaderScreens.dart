@@ -13,8 +13,8 @@ class Headerscreens extends StatelessWidget {
     required this.title,
     this.firstIcon,
     this.secondIcon,
-    this.onFirstIconTap, // 2. Adicionamos no construtor
-    this.onSecondIconTap, // 2. Adicionamos no construtor
+    this.onFirstIconTap,
+    this.onSecondIconTap,
   });
 
   Widget _buildHeaderButton(IconData icon, VoidCallback? onTap) {
@@ -55,14 +55,12 @@ class Headerscreens extends StatelessWidget {
           Row(
             children: [
               if (firstIcon != null)
-                // 4. Passamos a função onFirstIconTap aqui!
                 _buildHeaderButton(firstIcon!, onFirstIconTap),
 
               if (firstIcon != null && secondIcon != null)
                 const SizedBox(width: 12),
 
               if (secondIcon != null)
-                // 4. Passamos a função onSecondIconTap aqui!
                 _buildHeaderButton(secondIcon!, onSecondIconTap),
             ],
           ),

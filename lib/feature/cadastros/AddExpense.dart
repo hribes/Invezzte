@@ -140,7 +140,7 @@ class _AddExpenseState extends State<AddExpense> {
                 prefixIcon: Icons.category_outlined,
                 controller: _categoriaController,
                 onTap: () {
-                  // Aqui você chamará o BottomSheet de Categorias
+          
                   _categoriaController.text = "Moradia";
                 },
                 validator: (val) =>

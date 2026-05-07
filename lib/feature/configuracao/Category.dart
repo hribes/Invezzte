@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:invezzte/feature/widgets/HeaderScreens.dart';
 
 class Categories extends StatelessWidget {
   const Categories({super.key});
@@ -22,46 +23,11 @@ class Categories extends StatelessWidget {
               ),
               const SizedBox(height: 20),
 
-              // Cabeçalho: Título e Botão de Busca
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Categorias',
-                        style: TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
+              Headerscreens(
+                        title: 'Categorias', 
+                        firstIcon: Icons.search,
+                        secondIcon: Icons.notifications,
                       ),
-                      Container(
-                        height: 4,
-                        width: 130,
-                        color: Colors.blue, // Linha de destaque
-                      ),
-                    ],
-                  ),
-                  // Botão de Busca Flutuante/Circular
-                  Material(
-                    elevation: 4,
-                    shape: const CircleBorder(),
-                    color: const Color(0xFF8B66FF),
-                    child: IconButton(
-                      icon: const Icon(
-                        Icons.search,
-                        color: Colors.white,
-                        size: 28,
-                      ),
-                      onPressed: () {
-                        // Ação de busca
-                      },
-                    ),
-                  ),
-                ],
-              ),
               const SizedBox(height: 30),
 
               // Lista de Categorias

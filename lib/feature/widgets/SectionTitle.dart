@@ -15,7 +15,7 @@ class SectionTitle extends StatelessWidget {
           style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: Color(0xFF4A4A4A), // Cinza escuro conforme a imagem
+            color: Color(0xFF4A4A4A), 
             fontFamily: 'Poppins',
           ),
         ),
