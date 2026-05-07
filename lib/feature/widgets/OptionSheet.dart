@@ -28,8 +28,7 @@ class AddOptionsSheet extends StatelessWidget {
           const Divider(),
           _buildOption(Icons.assignment_outlined, "Cadastrar Categoria", () {
             Navigator.pop(context); 
-            // Aqui você pode adicionar a navegação para a tela de cadastro de categoria
-            context.push('/history'); // Exemplo: redireciona para o histórico (substitua pela rota correta)
+            context.push('/create-category');
           }),
         ],
       ),
