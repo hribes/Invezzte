@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:invezzte/core/injecao.dart';
 import 'package:invezzte/domain/notifiers/saldo_notifier.dart';
 import 'package:invezzte/feature/cadastros/AddBalance.dart';
 import 'package:invezzte/feature/cadastros/AddExpense.dart';
@@ -20,36 +21,20 @@ final GoRouter _router = GoRouter(
     GoRoute(path: '/login', builder: (context, state) => const Login()),
     GoRoute(path: '/home', builder: (context, state) => const Homeinvezzte()),
     GoRoute(path: '/spending', builder: (context, state) => const Spending()),
-    GoRoute(
-      path: '/investment',
-      builder: (context, state) => const Investment(),
-    ),
-    GoRoute(
-      path: '/profile',
-      builder: (context, state) => const ProfileConfiguration(),
-    ),
-    GoRoute(
-      path: '/add-expense',
-      builder: (context, state) => const AddExpense(),
-    ),
-    GoRoute(
-      path: '/add-balance',
-      builder: (context, state) => const AddBalance(),
-    ),
-    GoRoute(
-      path: '/create-category',
-      builder: (context, state) => CategoryCreate(),
-    ),
-    GoRoute(
-      path: '/register-user',
-      builder: (context, state) => const RegisterUser(),
-    ),
+    GoRoute(path: '/investment', builder: (context, state) => const Investment()),
+    GoRoute(path: '/profile', builder: (context, state) => const ProfileConfiguration()),
+    GoRoute(path: '/add-expense', builder: (context, state) => const AddExpense()),
+    GoRoute(path: '/add-balance', builder: (context, state) => const AddBalance()),
+    GoRoute(path: '/create-category', builder: (context, state) => CategoryCreate()),
+    GoRoute(path: '/register-user', builder: (context, state) => const RegisterUser()),
     GoRoute(path: '/history', builder: (context, state) => const History()),
     GoRoute(path: '/category', builder: (context, state) => const Categories()),
   ],
 );
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await configurarDependencias();
   runApp(const InvezzteApp());
 }
 
@@ -59,7 +44,7 @@ class InvezzteApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => SaldoNotifier(),
+      create: (_) => sl<SaldoNotifier>(),
       child: MaterialApp.router(
         title: 'Invezzte',
         theme: ThemeData(fontFamily: 'Poppins', primarySwatch: Colors.blue),

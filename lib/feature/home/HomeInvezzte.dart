@@ -46,6 +46,16 @@ class _HomeinvezzteState extends State<Homeinvezzte> {
   bool _isSaldoVisivel = true;
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        context.read<SaldoNotifier>().carregarSaldo();
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final saldoNotifier = context.watch<SaldoNotifier>();
 
@@ -57,15 +67,18 @@ class _HomeinvezzteState extends State<Homeinvezzte> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              HomeHeaderSection(
-                nomeUsuario: saldoNotifier.usuario.name,
-                saldo: saldoNotifier.saldo,
-                isSaldoVisivel: _isSaldoVisivel,
-                onToggleSaldo: () =>
-                    setState(() => _isSaldoVisivel = !_isSaldoVisivel),
-                onAddPressed: () => context.push('/add-balance'),
-                onNotificationPressed: () => context.push('/notificacoes'),
-              ),
+              saldoNotifier.carregando
+                  ? const Center(child: CircularProgressIndicator())
+                  : HomeHeaderSection(
+                      nomeUsuario: saldoNotifier.usuario.name,
+                      saldo: saldoNotifier.saldo,
+                      isSaldoVisivel: _isSaldoVisivel,
+                      onToggleSaldo: () =>
+                          setState(() => _isSaldoVisivel = !_isSaldoVisivel),
+                      onAddPressed: () => context.push('/add-balance'),
+                      onNotificationPressed: () =>
+                          context.push('/notificacoes'),
+                    ),
               const SizedBox(height: 30),
               HomeHistoryCategories(
                 categorias: _categoriasHistorico,
