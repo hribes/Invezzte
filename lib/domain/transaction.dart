@@ -7,7 +7,7 @@ class Transaction {
   final double amount;
   final DateTime date;
   final TransactionType type;
-  final TransactionTag tag;
+  final TransactionTag tag; //Dependendo da tela (Despesa ou saldo) a gente classifica.
 
   const Transaction({
     required this.id,

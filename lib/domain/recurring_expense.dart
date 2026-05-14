@@ -15,6 +15,7 @@ class RecurringExpense {
     required this.isActive,
   });
 
+
   factory RecurringExpense.fromJson(Map<String, dynamic> json) {
     return RecurringExpense(
       id: json['id'] as int,

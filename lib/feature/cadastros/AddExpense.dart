@@ -124,6 +124,7 @@ class _AddExpenseState extends State<AddExpense> {
 
               InputField(
                 label: "Data:",
+    
                 hintText: "03/05/2026",
                 prefixIcon: Icons.calendar_today_outlined,
                 controller: _dateController,
