@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:invezzte/domain/notifiers/saldo_notifier.dart';
 import 'package:invezzte/feature/widgets/FormButton.dart';
 import 'package:invezzte/feature/widgets/HeaderForm.dart';
 import 'package:invezzte/feature/widgets/InputField.dart';
@@ -67,13 +69,26 @@ class _AddBalanceState extends State<AddBalance> {
 
   void _salvarSaldo() {
     if (_formKey.currentState!.validate()) {
-      print("Saldo adicionado: R\$ ${_valorController.text}");
+      final valorTexto = _valorController.text
+          .replaceAll('.', '')
+          .replaceAll(',', '.');
+
+      final valor = double.tryParse(valorTexto) ?? 0.0;
+
+      context.read<SaldoNotifier>().adicionarSaldo(valor);
+
       Navigator.of(context).pop();
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final saldo = context.watch<SaldoNotifier>().saldo;
+
+    final partes = saldo.toStringAsFixed(2).split('.');
+    final inteiro = partes[0];
+    final decimal = ',${partes[1]}';
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -91,10 +106,10 @@ class _AddBalanceState extends State<AddBalance> {
           key: _formKey,
           child: Column(
             children: [
-              const Headerform(
+              Headerform(
                 title: "Adicionar Saldo",
-                balanceInteger: "3212",
-                balanceDecimal: ",66",
+                balanceInteger: inteiro,
+                balanceDecimal: decimal,
               ),
               const SizedBox(height: 30),
 
