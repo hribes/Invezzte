@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
-import 'enums.dart';
-
-
 
 class Category {
   final int id;
   final int userId;
   final String name;
   final String iconName; 
+  final String? colorHex; // Adicionado para suportar as cores do gráfico e UI
 
   const Category({
     required this.id,
     required this.userId,
     required this.name,
     required this.iconName, 
+    this.colorHex,
   });
 
-  // Recupera o ícone baseado no nome
   IconData get icon => _getIconFromName(iconName);
+
+  Color get color => colorHex != null 
+      ? Color(int.parse(colorHex!.replaceAll('#', '0xff'))) 
+      : Colors.grey;
 
   factory Category.fromJson(Map<String, dynamic> json) {
     return Category(
@@ -25,6 +27,7 @@ class Category {
       userId: json['userId'] as int,
       name: json['name'] as String,
       iconName: json['iconName'] as String? ?? 'help_outline', 
+      colorHex: json['colorHex'] as String?,
     );
   }
 
@@ -34,6 +37,7 @@ class Category {
       'userId': userId,
       'name': name,
       'iconName': iconName,
+      'colorHex': colorHex,
     };
   }
 
@@ -41,14 +45,15 @@ class Category {
     int? id,
     int? userId,
     String? name,
-    TransactionType? type,
     String? iconName,
+    String? colorHex,
   }) {
     return Category(
       id: id ?? this.id,
       userId: userId ?? this.userId,
       name: name ?? this.name,
       iconName: iconName ?? this.iconName,
+      colorHex: colorHex ?? this.colorHex,
     );
   }
 
@@ -71,9 +76,10 @@ class Category {
           id == other.id &&
           userId == other.userId &&
           name == other.name &&
-          iconName == other.iconName;
+          iconName == other.iconName &&
+          colorHex == other.colorHex;
 
   @override
   int get hashCode =>
-      id.hashCode ^ userId.hashCode ^ name.hashCode  ^ iconName.hashCode;
+      id.hashCode ^ userId.hashCode ^ name.hashCode ^ iconName.hashCode ^ colorHex.hashCode;
 }
