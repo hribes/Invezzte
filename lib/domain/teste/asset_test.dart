@@ -23,7 +23,7 @@ void main() {
     });
 
     test('toJson produces correct JSON', () {
-      final asset = const Asset(
+      const asset = Asset(
         id: 1,
         userId: 10,
         tickerOrName: 'Bitcoin',
@@ -41,7 +41,7 @@ void main() {
     });
 
     test('copyWith modifies only specified fields', () {
-      final asset = const Asset(
+      const asset = Asset(
         id: 1,
         userId: 10,
         tickerOrName: 'Bitcoin',

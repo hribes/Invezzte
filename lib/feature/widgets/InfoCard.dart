@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-
-// 1. Criamos um Enum para definir os tipos de transação
-enum TransactionType { entrada, saida, neutro }
+// Importe o arquivo correto (ajuste o caminho se necessário, mas geralmente é sem o /lib/)
+import 'package:invezzte/domain/enums.dart';
 
 class InfoCard extends StatelessWidget {
   final String title;
   final String date;
   final IconData icon;
-  final double amount; // Recebe o valor como número (ex: 30.00)
+  final double amount;
   final TransactionType type;
 
   const InfoCard({
@@ -16,43 +15,42 @@ class InfoCard extends StatelessWidget {
     required this.date,
     required this.icon,
     required this.amount,
-    this.type = TransactionType.neutro, // Se não informar nada, fica preto por padrão
+    // Aqui usamos o TransactionType que vem do seu arquivo de enums
+    required this.type,
   });
 
   @override
   Widget build(BuildContext context) {
-    // 2. Lógica para definir Cor e Prefixo automaticamente
     Color valueColor;
     String prefix;
 
+    // Ajuste aqui para os nomes que estão no seu arquivo de enums oficial
     switch (type) {
-      case TransactionType.entrada:
-        valueColor = const Color(0xFF34C759); // Verde Vibrante
+      case TransactionType.income: // Ajustado conforme seu enum original
+        valueColor = const Color(0xFF34C759);
         prefix = '+R\$';
         break;
-      case TransactionType.saida:
-        valueColor = const Color(0xFFFF3B30); // Vermelho
+      case TransactionType.expense: // Ajustado conforme seu enum original
+        valueColor = const Color(0xFFFF3B30);
         prefix = '-R\$';
         break;
-      case TransactionType.neutro:
       default:
-        valueColor = Colors.black; // Preto
-        prefix = 'R\$'; // Sem sinal de + ou -
+        valueColor = Colors.black;
+        prefix = 'R\$';
         break;
     }
 
-    // 3. Formata o valor trocando ponto por vírgula (padrão BR)
     String formattedAmount = amount.toStringAsFixed(2).replaceAll('.', ',');
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 10), // Espaçamento entre as caixinhas
+      margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04), // Aquela sombrinha suave do seu print
+            color: Colors.black.withOpacity(0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -60,18 +58,15 @@ class InfoCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // Ícone roxo redondo
           Container(
             padding: const EdgeInsets.all(12),
             decoration: const BoxDecoration(
-              color: Color(0xFF8C4EFF), // Aquele roxo padrão do seu app
+              color: Color(0xFF8C4EFF),
               shape: BoxShape.circle,
             ),
             child: Icon(icon, color: Colors.white, size: 20),
           ),
           const SizedBox(width: 16),
-          
-          // Textos (Título e Data)
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,22 +76,16 @@ class InfoCard extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black,
                   ),
                 ),
                 const SizedBox(height: 2),
                 Text(
                   date,
-                  style: const TextStyle(
-                    fontSize: 11,
-                    color: Colors.grey,
-                  ),
+                  style: const TextStyle(fontSize: 11, color: Colors.grey),
                 ),
               ],
             ),
           ),
-          
-          // Valor final formatado e com a cor certa!
           Text(
             '$prefix$formattedAmount',
             style: TextStyle(

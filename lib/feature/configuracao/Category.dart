@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:invezzte/domain/notifiers/categoria_notifier.dart';
 import 'package:invezzte/feature/widgets/HeaderScreens.dart';
 
 class Categories extends StatelessWidget {
@@ -6,6 +8,9 @@ class Categories extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final categoriaNotifier = context.watch<CategoriaNotifier>();
+    final categorias = categoriaNotifier.categorias;
+
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FE),
       body: SafeArea(
@@ -14,7 +19,6 @@ class Categories extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Botão de Fechar
               IconButton(
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(),
@@ -22,27 +26,19 @@ class Categories extends StatelessWidget {
                 onPressed: () => Navigator.pop(context),
               ),
               const SizedBox(height: 20),
-
-              Headerscreens(
-                        title: 'Categorias', 
-                        firstIcon: Icons.search,
-                        secondIcon: Icons.notifications,
-                      ),
+              const Headerscreens(
+                title: 'Categorias',
+                firstIcon: Icons.search,
+                secondIcon: Icons.notifications,
+              ),
               const SizedBox(height: 30),
-
-              // Lista de Categorias
               Expanded(
-                child: ListView(
-                  children: const [
-                    CategoryItem(
-                      title: 'Amazon Prime',
-                      icon: Icons.movie_creation_outlined,
-                    ),
-                    CategoryItem(title: 'Recarga', icon: Icons.cell_tower),
-                    CategoryItem(title: 'Venda da bicicleta', icon: Icons.add),
-                    CategoryItem(title: 'Recarga', icon: Icons.cell_tower),
-                    CategoryItem(title: 'Faculdade', icon: Icons.school),
-                  ],
+                child: ListView.builder(
+                  itemCount: categorias.length,
+                  itemBuilder: (context, index) {
+                    final cat = categorias[index];
+                    return CategoryItem(title: cat.name, icon: cat.icon);
+                  },
                 ),
               ),
             ],
@@ -53,6 +49,7 @@ class Categories extends StatelessWidget {
   }
 }
 
+// DEFINIÇÃO DO WIDGET AQUI NO MESMO ARQUIVO
 class CategoryItem extends StatelessWidget {
   final String title;
   final IconData icon;
@@ -77,7 +74,6 @@ class CategoryItem extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // Ícone da Categoria
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
@@ -87,8 +83,6 @@ class CategoryItem extends StatelessWidget {
             child: Icon(icon, color: Colors.white, size: 28),
           ),
           const SizedBox(width: 16),
-
-          // Nome da Categoria
           Expanded(
             child: Text(
               title,
@@ -99,34 +93,13 @@ class CategoryItem extends StatelessWidget {
               ),
             ),
           ),
-
-          // Botão Excluir
           IconButton(
-            style: IconButton.styleFrom(
-              backgroundColor: const Color(0xFFE0E0FF),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
             icon: const Icon(Icons.delete_outline, color: Color(0xFF8B66FF)),
-            onPressed: () {
-              // Ação para deletar
-            },
+            onPressed: () {},
           ),
-          const SizedBox(width: 8),
-
-          // Botão Editar
           IconButton(
-            style: IconButton.styleFrom(
-              backgroundColor: const Color(0xFFFFF4D1),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
             icon: const Icon(Icons.edit_outlined, color: Color(0xFFFFC107)),
-            onPressed: () {
-              // Ação para editar
-            },
+            onPressed: () {},
           ),
         ],
       ),

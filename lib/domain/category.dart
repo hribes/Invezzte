@@ -64,6 +64,12 @@ class Category {
       case 'directions_car': return Icons.directions_car;
       case 'home': return Icons.home;
       case 'credit_card': return Icons.credit_card;
+      case 'school': return Icons.school;
+      case 'work': return Icons.work;
+      case 'pet': return Icons.pets;
+      case 'fitness_center': return Icons.fitness_center;
+      case 'plane': return Icons.airplanemode_active;
+      case 'entertainment': return Icons.movie;
       default: return Icons.help_outline;
     }
   }

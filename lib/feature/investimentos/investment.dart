@@ -25,10 +25,10 @@ class Investment extends StatelessWidget {
                 ),
               ),
               
-              child: SafeArea(
+              child: const SafeArea(
                 bottom: false, // Só precisamos proteger a parte de cima
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(24, 20, 24, 20),
+                  padding: EdgeInsets.fromLTRB(24, 20, 24, 20),
                   child: Column(
                     children: [
                       // O seu componente genérico de Header
@@ -39,14 +39,14 @@ class Investment extends StatelessWidget {
                       ),
                       
                       // Textos de Patrimônio
-                      const Padding(
+                      Padding(
                         padding: EdgeInsets.only(top: 10), // Corrigido o EdgeInsets
                         child: Align(
                           alignment: Alignment.centerLeft,
                           child: Text('Total de Patrimônio'),
                         ),
                       ),
-                      const Align(
+                      Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
                           "R\$98.548,11",
@@ -59,7 +59,7 @@ class Investment extends StatelessWidget {
                       ),
                       
                       // Gráfico
-                      const Padding(
+                      Padding(
                         padding: EdgeInsets.only(top: 30), // Corrigido o EdgeInsets
                         child: Align(child: Graphic()),
                       )

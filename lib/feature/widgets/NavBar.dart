@@ -31,13 +31,13 @@ class NavBar extends StatelessWidget {
       context: context,
       barrierColor: Colors.black.withOpacity(0.4), // Cor do fundo escurecido
       builder: (BuildContext context) {
-        return Align(
+        return const Align(
           alignment: Alignment.bottomCenter,
           child: Padding(
-            padding: const EdgeInsets.only(bottom: 110.0, left: 20, right: 20),
+            padding: EdgeInsets.only(bottom: 110.0, left: 20, right: 20),
             child: Material(
               color: Colors.transparent,
-              child: const AddOptionsSheet(), // Chama o seu widget aqui
+              child: AddOptionsSheet(), // Chama o seu widget aqui
             ),
           ),
         );

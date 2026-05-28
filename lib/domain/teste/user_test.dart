@@ -18,7 +18,7 @@ void main() {
     });
 
     test('toJson produces correct JSON', () {
-      final user = const User(
+      const user = User(
         id: 1,
         name: 'Lucas',
         email: 'lucashygidio123@gmail.com',
@@ -32,7 +32,7 @@ void main() {
     });
 
     test('copyWith modifies only specified fields', () {
-      final user = const User(
+      const user = User(
         id: 1,
         name: 'Lucas',
         email: 'lucashygidio123@gmail.com',

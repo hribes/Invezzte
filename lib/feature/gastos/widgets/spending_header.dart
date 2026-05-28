@@ -29,7 +29,7 @@ class SpendingHeader extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(24, 20, 24, 40), 
           child: Column(
             children: [
-              Headerscreens(
+              const Headerscreens(
                 title: 'Gastos',
                 firstIcon: Icons.search,
                 secondIcon: Icons.notifications,

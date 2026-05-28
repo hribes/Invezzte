@@ -23,36 +23,36 @@ class CryptoCard extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           color: const Color.fromARGB(255, 255, 255, 255),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
-              color: const Color(0x395E5E5E),
+              color: Color(0x395E5E5E),
               blurRadius: 15,
-              offset: const Offset(0, 5),
+              offset: Offset(0, 5),
             ),
           ],
         ),
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsetsGeometry.all(10.0),
+              padding: const EdgeInsetsGeometry.all(10.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
                     children: [
                       Container(
-                        padding: EdgeInsets.all(5.0),
-                        decoration: BoxDecoration(
+                        padding: const EdgeInsets.all(5.0),
+                        decoration: const BoxDecoration(
                           color: Color(0xFFFBB718),
                           shape: BoxShape.circle,
                         ),
-                        child: Icon(
+                        child: const Icon(
                           Icons.currency_bitcoin,
                           color: Color(0xffffffff),
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsetsGeometry.all(10.0),
+                        padding: const EdgeInsetsGeometry.all(10.0),
                         child: Column(
                           children: [
                             Text(
@@ -86,7 +86,7 @@ class CryptoCard extends StatelessWidget {
                 ],
               ),
             ),
-            Padding(padding: EdgeInsetsGeometry.all(15), child: Graphic()),
+            const Padding(padding: EdgeInsetsGeometry.all(15), child: Graphic()),
           ],
         ),
       ),

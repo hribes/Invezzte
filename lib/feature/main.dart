@@ -14,20 +14,46 @@ import 'package:invezzte/feature/login/Login.dart';
 import 'package:invezzte/feature/configuracao/CategoryCreate.dart';
 import 'package:invezzte/feature/cadastros/RegisterUser.dart';
 import 'package:invezzte/feature/configuracao/Category.dart';
+import 'package:invezzte/domain/notifiers/historico_notifier.dart';
+import 'package:invezzte/domain/notifiers/categoria_notifier.dart';
 
 final GoRouter _router = GoRouter(
   initialLocation: '/login',
   routes: [
     GoRoute(path: '/login', builder: (context, state) => const Login()),
-    GoRoute(path: '/home', builder: (context, state) => const Homeinvezzte()),
+    GoRoute(path: '/home', builder: (context, state) => const HomeInvezzte()),
     GoRoute(path: '/spending', builder: (context, state) => const Spending()),
-    GoRoute(path: '/investment', builder: (context, state) => const Investment()),
-    GoRoute(path: '/profile', builder: (context, state) => const ProfileConfiguration()),
-    GoRoute(path: '/add-expense', builder: (context, state) => const AddExpense()),
-    GoRoute(path: '/add-balance', builder: (context, state) => const AddBalance()),
-    GoRoute(path: '/create-category', builder: (context, state) => CategoryCreate()),
-    GoRoute(path: '/register-user', builder: (context, state) => const RegisterUser()),
-    GoRoute(path: '/history', builder: (context, state) => const History()),
+    GoRoute(
+      path: '/investment',
+      builder: (context, state) => const Investment(),
+    ),
+    GoRoute(
+      path: '/profile',
+      builder: (context, state) => const ProfileConfiguration(),
+    ),
+    GoRoute(
+      path: '/add-expense',
+      builder: (context, state) => const AddExpense(),
+    ),
+    GoRoute(
+      path: '/add-balance',
+      builder: (context, state) => const AddBalance(),
+    ),
+    GoRoute(
+      path: '/create-category',
+      builder: (context, state) => CategoryCreate(),
+    ),
+    GoRoute(
+      path: '/register-user',
+      builder: (context, state) => const RegisterUser(),
+    ),
+    GoRoute(
+      path: '/history',
+      builder: (context, state) {
+        final categoryName = state.uri.queryParameters['category'];
+        return History(initialCategoryName: categoryName);
+      },
+    ),
     GoRoute(path: '/category', builder: (context, state) => const Categories()),
   ],
 );
@@ -43,8 +69,13 @@ class InvezzteApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => sl<SaldoNotifier>(),
+    // MultiProvider substitui o ChangeNotifierProvider único
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => sl<SaldoNotifier>()),
+        ChangeNotifierProvider(create: (_) => sl<HistoricoNotifier>()),
+        ChangeNotifierProvider(create: (_) => sl<CategoriaNotifier>()),
+      ],
       child: MaterialApp.router(
         title: 'Invezzte',
         theme: ThemeData(fontFamily: 'Poppins', primarySwatch: Colors.blue),

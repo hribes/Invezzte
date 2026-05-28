@@ -22,11 +22,11 @@ class ProfileConfiguration extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
 
-              SafeArea(
+              const SafeArea(
                 bottom: false,
                 child: Padding(
                   // Mantivemos o padding padrão
-                  padding: const EdgeInsets.fromLTRB(24, 20, 24, 10),
+                  padding: EdgeInsets.fromLTRB(24, 20, 24, 10),
                   child: Headerscreens(
                     title: 'Meu Perfil',
                     firstIcon: Icons.search,

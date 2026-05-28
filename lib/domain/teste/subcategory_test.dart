@@ -14,7 +14,7 @@ void main() {
     });
 
     test('toJson produces correct JSON', () {
-      final subcategory = const Subcategory(id: 1, categoryId: 5, name: 'Uber');
+      const subcategory = Subcategory(id: 1, categoryId: 5, name: 'Uber');
 
       final json = subcategory.toJson();
 
@@ -24,7 +24,7 @@ void main() {
     });
 
     test('copyWith modifies only specified fields', () {
-      final subcategory = const Subcategory(id: 1, categoryId: 5, name: 'Uber');
+      const subcategory = Subcategory(id: 1, categoryId: 5, name: 'Uber');
 
       final updatedSubcategory = subcategory.copyWith(name: 'Gasolina');
 

@@ -24,7 +24,7 @@ void main() {
     });
 
     test('toJson produces correct JSON', () {
-      final expense = const RecurringExpense(
+      const expense = RecurringExpense(
         id: 1,
         userId: 10,
         subcategoryId: 3,
@@ -44,7 +44,7 @@ void main() {
     });
 
     test('copyWith modifies only specified fields', () {
-      final expense = const RecurringExpense(
+      const expense = RecurringExpense(
         id: 1,
         userId: 10,
         subcategoryId: 3,
