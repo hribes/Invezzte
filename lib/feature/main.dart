@@ -14,6 +14,7 @@ import 'package:invezzte/feature/login/Login.dart';
 import 'package:invezzte/feature/configuracao/CategoryCreate.dart';
 import 'package:invezzte/feature/cadastros/RegisterUser.dart';
 import 'package:invezzte/feature/configuracao/Category.dart';
+import 'package:invezzte/domain/notifiers/user_notifier.dart';
 
 final GoRouter _router = GoRouter(
   initialLocation: '/login',
@@ -43,8 +44,12 @@ class InvezzteApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => sl<SaldoNotifier>(),
+    return MultiProvider(
+      //Usado pra ter mais de um provider na applicação
+      providers: [
+        ChangeNotifierProvider(create: (_) => sl<SaldoNotifier>()),
+        ChangeNotifierProvider(create: (_) => sl<UserProvider>()),
+      ],
       child: MaterialApp.router(
         title: 'Invezzte',
         theme: ThemeData(fontFamily: 'Poppins', primarySwatch: Colors.blue),
