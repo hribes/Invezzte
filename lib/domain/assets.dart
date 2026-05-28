@@ -3,11 +3,11 @@ import 'enums.dart';
 class Asset {
   final int id;
   final int userId;
-  final String ticker; // Ex: BTC, USDT, PETR4.SA - SERÁ USADO NA API
-  final String name; // Ex: Bitcoin, Petrobras SERÁ USADO NA INTERFACE
+  final String ticker;
+  final String name;
   final AssetClass assetClass;
   final bool isStaking;
-  final double? currentPrice; // Cache do último preço retornado pela API
+  final double? currentPrice;
   final DateTime? lastPriceUpdate; 
 
   const Asset({
@@ -21,35 +21,33 @@ class Asset {
     this.lastPriceUpdate,
   });
 
-  factory Asset.fromJson(Map<String, dynamic> json) {
+  factory Asset.fromMap(Map<String, dynamic> map) {
     return Asset(
-      id: json['id'] as int,
-      userId: json['userId'] as int,
-      ticker: json['ticker'] as String,
-      name: json['name'] as String,
+      id: map['id_asset'] as int,
+      userId: map['user_id'] as int,
+      ticker: map['ticker'] as String,
+      name: map['name'] as String,
       assetClass: AssetClass.values.firstWhere(
-        (e) => e.name == json['assetClass'],
+        (e) => e.name == map['asset_class'],
       ),
-      isStaking: json['isStaking'] as bool,
-      currentPrice: (json['currentPrice'] as num?)?.toDouble(),
-      lastPriceUpdate: json['lastPriceUpdate'] != null ? DateTime.parse(json['lastPriceUpdate'] as String) : null,
+      isStaking: (map['is_staking'] as int) == 1,
+      currentPrice: (map['current_price'] as num?)?.toDouble(),
+      lastPriceUpdate: map['last_price_update'] != null ? DateTime.parse(map['last_price_update'] as String) : null,
     );
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     return {
-      'id': id,
-      'userId': userId,
+      'id_asset': id,
+      'user_id': userId,
       'ticker': ticker,
       'name': name,
-      'assetClass': assetClass.name,
-      'isStaking': isStaking,
-      'currentPrice': currentPrice,
-      'lastPriceUpdate': lastPriceUpdate?.toIso8601String(),
+      'asset_class': assetClass.name,
+      'is_staking': isStaking ? 1 : 0, // SQLite boolean
+      'current_price': currentPrice,
+      'last_price_update': lastPriceUpdate?.toIso8601String(),
     };
   }
-
-  
 
   Asset copyWith({
     int? id,
@@ -72,22 +70,4 @@ class Asset {
       lastPriceUpdate: lastPriceUpdate ?? this.lastPriceUpdate,
     );
   }
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Asset &&
-          runtimeType == other.runtimeType &&
-          id == other.id &&
-          userId == other.userId &&
-          ticker == other.ticker &&
-          name == other.name &&
-          assetClass == other.assetClass &&
-          isStaking == other.isStaking &&
-          currentPrice == other.currentPrice &&
-          lastPriceUpdate == other.lastPriceUpdate;
-
-  @override
-  int get hashCode =>
-      id.hashCode ^ userId.hashCode ^ ticker.hashCode ^ name.hashCode ^ assetClass.hashCode ^ isStaking.hashCode ^ currentPrice.hashCode ^ lastPriceUpdate.hashCode;
 }

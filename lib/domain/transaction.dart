@@ -3,20 +3,18 @@ import 'enums.dart';
 class Transaction {
   final int id;
   final int userId;
-  final int categoryId; // Conexão direta com a categoria principal
-  final int? subcategoryId;
-  final String title; // Adicionado para suportar "Ex: Conta de Água"
+  final int categoryId;
+  final String title;
   final double amount;
   final DateTime date;
   final TransactionType type;
   final TransactionTag tag; 
-  final TransactionStatus status; // Adicionado para suportar Pago/Pendente
+  final TransactionStatus status;
 
   const Transaction({
     required this.id,
     required this.userId,
     required this.categoryId,
-    this.subcategoryId,
     required this.title,
     required this.amount,
     required this.date,
@@ -25,27 +23,25 @@ class Transaction {
     this.status = TransactionStatus.paid,
   });
 
-  factory Transaction.fromJson(Map<String, dynamic> json) {
+  factory Transaction.fromMap(Map<String, dynamic> map) {
     return Transaction(
-      id: json['id'] as int,
-      userId: json['userId'] as int,
-      categoryId: json['categoryId'] as int,
-      subcategoryId: json['subcategoryId'] as int?,
-      title: json['title'] as String,
-      amount: (json['amount'] as num).toDouble(),
-      date: DateTime.parse(json['date'] as String),
-      type: TransactionType.values.firstWhere((e) => e.name == json['type']),
-      tag: TransactionTag.values.firstWhere((e) => e.name == json['tag']),
-      status: TransactionStatus.values.firstWhere((e) => e.name == json['status'], orElse: () => TransactionStatus.paid),
+      id: map['id_transaction'] as int,
+      userId: map['user_id'] as int,
+      categoryId: map['category_id'] as int,
+      title: map['title'] as String,
+      amount: (map['amount'] as num).toDouble(),
+      date: DateTime.parse(map['date'] as String),
+      type: TransactionType.values.firstWhere((e) => e.name == map['type']),
+      tag: TransactionTag.values.firstWhere((e) => e.name == map['tag']),
+      status: TransactionStatus.values.firstWhere((e) => e.name == map['status'], orElse: () => TransactionStatus.paid),
     );
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     return {
-      'id': id,
-      'userId': userId,
-      'categoryId': categoryId,
-      'subcategoryId': subcategoryId,
+      'id_transaction': id,
+      'user_id': userId,
+      'category_id': categoryId,
       'title': title,
       'amount': amount,
       'date': date.toIso8601String(),
@@ -59,7 +55,6 @@ class Transaction {
     int? id,
     int? userId,
     int? categoryId,
-    int? subcategoryId,
     String? title,
     double? amount,
     DateTime? date,
@@ -71,7 +66,6 @@ class Transaction {
       id: id ?? this.id,
       userId: userId ?? this.userId,
       categoryId: categoryId ?? this.categoryId,
-      subcategoryId: subcategoryId ?? this.subcategoryId,
       title: title ?? this.title,
       amount: amount ?? this.amount,
       date: date ?? this.date,
@@ -80,24 +74,4 @@ class Transaction {
       status: status ?? this.status,
     );
   }
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Transaction &&
-          runtimeType == other.runtimeType &&
-          id == other.id &&
-          userId == other.userId &&
-          categoryId == other.categoryId &&
-          subcategoryId == other.subcategoryId &&
-          title == other.title &&
-          amount == other.amount &&
-          date == other.date &&
-          type == other.type &&
-          tag == other.tag &&
-          status == other.status;
-
-  @override
-  int get hashCode =>
-      id.hashCode ^ userId.hashCode ^ categoryId.hashCode ^ subcategoryId.hashCode ^ title.hashCode ^ amount.hashCode ^ date.hashCode ^ type.hashCode ^ tag.hashCode ^ status.hashCode;
 }
