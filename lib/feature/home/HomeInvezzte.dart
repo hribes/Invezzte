@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart' hide SearchBar;
 import 'package:go_router/go_router.dart';
+import 'package:invezzte/domain/notifiers/user_notifier.dart';
 import 'package:provider/provider.dart';
 import 'package:invezzte/domain/notifiers/saldo_notifier.dart';
 import 'package:invezzte/feature/widgets/NavBar.dart';
@@ -57,6 +58,7 @@ class _HomeinvezzteState extends State<Homeinvezzte> {
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserProvider>(context).currentUser;
     final saldoNotifier = context.watch<SaldoNotifier>();
 
     return Scaffold(
@@ -70,8 +72,8 @@ class _HomeinvezzteState extends State<Homeinvezzte> {
               saldoNotifier.carregando
                   ? const Center(child: CircularProgressIndicator())
                   : HomeHeaderSection(
-                      nomeUsuario: saldoNotifier.usuario.name,
-                      saldo: saldoNotifier.saldo,
+                      nomeUsuario: user?.name ?? 'Usuário',
+                      saldo: user?.saldo ?? 0.0,
                       isSaldoVisivel: _isSaldoVisivel,
                       onToggleSaldo: () =>
                           setState(() => _isSaldoVisivel = !_isSaldoVisivel),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:invezzte/feature/widgets/InputField.dart';
+import 'package:provider/provider.dart';
+import 'package:invezzte/domain/notifiers/user_notifier.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -11,23 +13,38 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
-
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-
+  
+  bool _isLoading = false; 
+  
   @override
   void dispose() {
-
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
-  void _realizarLogin() {
-
+  Future<void> _realizarLogin() async {
     if (_formKey.currentState!.validate()) {
+      setState(() => _isLoading = true);
 
-      context.go('/home');
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      
+      final sucesso = await userProvider.login(
+        _emailController.text,
+        _passwordController.text,
+      );
+
+      if (!mounted) return;
+
+      setState(() => _isLoading = false);
+
+      if (sucesso) {
+        context.go('/home');
+      } else {
+        
+      }
     }
   }
 
@@ -158,8 +175,8 @@ class _LoginState extends State<Login> {
                           return null;
                         },
                       ),
+                      
                       const SizedBox(height: 40),
-
                       SizedBox(
                         width: double.infinity,
                         height: 55,
@@ -172,9 +189,10 @@ class _LoginState extends State<Login> {
                               borderRadius: BorderRadius.circular(15),
                             ),
                           ),
-                          onPressed:
-                              _realizarLogin, 
-                          child: const Text(
+                          onPressed: _isLoading ? null : _realizarLogin, 
+                          child: _isLoading 
+                            ? const CircularProgressIndicator(color: Color(0xFFFBB016))
+                            : const Text(
                             "ENTRAR",
                             style: TextStyle(
                               fontSize: 18,

@@ -28,10 +28,17 @@ class _AddBalanceState extends State<AddBalance> {
     String dataFormatada =
         "${hoje.day.toString().padLeft(2, '0')}/${hoje.month.toString().padLeft(2, '0')}/${hoje.year}";
     _dateController.text = dataFormatada;
+
+    _valorController.addListener(_atualizarPreview);
+  }
+
+  void _atualizarPreview() {
+    setState(() {});
   }
 
   @override
   void dispose() {
+    _valorController.removeListener(_atualizarPreview);
     _valorController.dispose();
     _tituloController.dispose();
     _dateController.dispose();
@@ -83,9 +90,15 @@ class _AddBalanceState extends State<AddBalance> {
 
   @override
   Widget build(BuildContext context) {
-    final saldo = context.watch<SaldoNotifier>().saldo;
 
-    final partes = saldo.toStringAsFixed(2).split('.');
+    final saldoReal = context.watch<SaldoNotifier>().saldo;
+    final valorTexto = _valorController.text
+        .replaceAll('.', '')
+        .replaceAll(',', '.');
+    final valorDigitado = double.tryParse(valorTexto) ?? 0.0;
+
+    final saldoPreview = saldoReal + valorDigitado;
+    final partes = saldoPreview.toStringAsFixed(2).split('.');
     final inteiro = partes[0];
     final decimal = ',${partes[1]}';
 
