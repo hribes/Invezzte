@@ -2,20 +2,15 @@ import 'package:flutter/foundation.dart';
 import 'package:invezzte/core/injecao.dart';
 import 'package:invezzte/domain/repositories/saldo_repository.dart';
 import 'package:invezzte/domain/user.dart';
+import 'package:invezzte/domain/notifiers/user_notifier.dart'; // Importe o seu UserProvider
 
 class SaldoNotifier extends ChangeNotifier {
-  User _usuario = const User(
-    id: 1,
-    name: "Lucas Hygidio",
-    email: "lucas@email.com",
-    saldo: 0.0,
-  );
-
   bool _carregando = false;
 
-  User get usuario => _usuario;
-  double get saldo => _usuario.saldo;
   bool get carregando => _carregando;
+
+  User? get usuario => sl<UserProvider>().currentUser;
+  double get saldo => sl<UserProvider>().currentUser?.saldo ?? 0.0;
 
   Future<void> carregarSaldo() async {
     _carregando = true;
@@ -24,7 +19,8 @@ class SaldoNotifier extends ChangeNotifier {
     final repository = sl<SaldoRepository>();
     final saldoBuscado = await repository.buscarSaldo();
 
-    _usuario = _usuario.copyWith(saldo: saldoBuscado);
+    sl<UserProvider>().atualizarSaldo(saldoBuscado);
+    
     _carregando = false;
     notifyListeners();
   }
@@ -33,7 +29,20 @@ class SaldoNotifier extends ChangeNotifier {
     final repository = sl<SaldoRepository>();
     await repository.salvarSaldo(valor);
 
-    _usuario = _usuario.copyWith(saldo: _usuario.saldo + valor);
-    notifyListeners();
+    final saldoAtual = sl<UserProvider>().currentUser?.saldo ?? 0.0;
+    sl<UserProvider>().atualizarSaldo(saldoAtual + valor);
+
+    notifyListeners(); 
+  }
+
+Future<void> retirarSaldo(double valor) async {
+    final repository = sl<SaldoRepository>();
+    await repository.salvarSaldo(-valor); 
+
+    final saldoAtual = sl<UserProvider>().currentUser?.saldo ?? 0.0;
+    
+    sl<UserProvider>().atualizarSaldo(saldoAtual - valor);
+    
+    notifyListeners(); 
   }
 }

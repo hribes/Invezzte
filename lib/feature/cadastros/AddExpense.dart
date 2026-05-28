@@ -4,6 +4,8 @@ import 'package:invezzte/feature/widgets/HeaderForm.dart';
 import 'package:invezzte/feature/widgets/InputField.dart';
 import 'package:invezzte/domain/suporte/Validacoes.dart';
 import 'package:invezzte/domain/suporte/MoedaFormatter.dart';
+import 'package:provider/provider.dart'; 
+import 'package:invezzte/domain/notifiers/saldo_notifier.dart';
 
 class AddExpense extends StatefulWidget {
   const AddExpense({super.key});
@@ -27,10 +29,17 @@ class _AddExpenseState extends State<AddExpense> {
     String dataFormatada =
         "${hoje.day.toString().padLeft(2, '0')}/${hoje.month.toString().padLeft(2, '0')}/${hoje.year}";
     _dateController.text = dataFormatada;
+
+    _valorController.addListener(_atualizarPreview);
+  }
+
+  void _atualizarPreview() {
+    setState(() {});
   }
 
   @override
   void dispose() {
+    _valorController.removeListener(_atualizarPreview);
     _valorController.dispose();
     _tituloController.dispose();
     _dateController.dispose();
@@ -69,13 +78,31 @@ class _AddExpenseState extends State<AddExpense> {
 
   void _salvarDespesa() {
     if (_formKey.currentState!.validate()) {
-      print("Despesa salva: R\$ ${_valorController.text}");
+      final valorTexto = _valorController.text
+      .replaceAll('.', '')
+      .replaceAll(',', '.');
+
+      final valor = double.tryParse(valorTexto) ?? 0.0;
+
+      context.read<SaldoNotifier>().retirarSaldo(valor);
       Navigator.of(context).pop();
     }
   }
 
   @override
   Widget build(BuildContext context) {
+
+    final saldoReal = context.watch<SaldoNotifier>().saldo;
+    final valorTexto = _valorController.text
+        .replaceAll('.', '')
+        .replaceAll(',', '.');
+    final valorDigitado = double.tryParse(valorTexto) ?? 0.0;
+
+    final saldoPreview = saldoReal - valorDigitado;
+    final partes = saldoPreview.toStringAsFixed(2).split('.');
+    final inteiro = partes[0];
+    final decimal = ',${partes[1]}';
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -93,10 +120,10 @@ class _AddExpenseState extends State<AddExpense> {
           key: _formKey,
           child: Column(
             children: [
-              const Headerform(
+              Headerform(
                 title: "Adicionar Despesa",
-                balanceInteger: "3212",
-                balanceDecimal: ",66",
+                balanceInteger: inteiro,
+                balanceDecimal: decimal,
               ),
               const SizedBox(height: 30),
 

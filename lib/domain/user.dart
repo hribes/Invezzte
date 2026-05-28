@@ -9,6 +9,7 @@ class User {
   final double? salaryAmount;
   final SalaryFrequency? salaryFrequency;
   final DateTime? salaryDate;
+  final String? password;
 
   const User({
     required this.id,
@@ -19,35 +20,38 @@ class User {
     this.salaryAmount,
     this.salaryFrequency,
     this.salaryDate,
+    this.password,
   });
 
-  factory User.fromJson(Map<String, dynamic> json) {
+  factory User.fromMap(Map<String, dynamic> map) {
     return User(
-      id: json['id'] as int,
-      name: json['name'] as String,
-      email: json['email'] as String,
-      saldo: (json['saldo'] as num?)?.toDouble() ?? 0.0,
-      gender: json['gender'] != null 
-          ? Gender.values.firstWhere((e) => e.name == json['gender'], orElse: () => Gender.preferNotToSay) 
+      id: map['id_user'] as int,
+      name: map['name'] as String,
+      email: map['email'] as String,
+      saldo: (map['saldo'] as num?)?.toDouble() ?? 0.0,
+      gender: map['gender'] != null 
+          ? Gender.values.firstWhere((e) => e.name == map['gender'], orElse: () => Gender.preferNotToSay) 
           : null,
-      salaryAmount: (json['salaryAmount'] as num?)?.toDouble(),
-      salaryFrequency: json['salaryFrequency'] != null 
-          ? SalaryFrequency.values.firstWhere((e) => e.name == json['salaryFrequency'], orElse: () => SalaryFrequency.monthly) 
+      salaryAmount: (map['salary_amount'] as num?)?.toDouble(),
+      salaryFrequency: map['salary_frequency'] != null 
+          ? SalaryFrequency.values.firstWhere((e) => e.name == map['salary_frequency'], orElse: () => SalaryFrequency.monthly) 
           : null,
-      salaryDate: json['salaryDate'] != null ? DateTime.parse(json['salaryDate'] as String) : null,
+      salaryDate: map['salary_date'] != null ? DateTime.parse(map['salary_date'] as String) : null,
+      password: map['password'] as String?,
     );
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     return {
-      'id': id, 
+      'id_user': id, 
       'name': name, 
       'email': email, 
-      'saldo': saldo,
       'gender': gender?.name,
-      'salaryAmount': salaryAmount,
-      'salaryFrequency': salaryFrequency?.name,
-      'salaryDate': salaryDate?.toIso8601String(),
+      'saldo': saldo,
+      'salary_amount': salaryAmount,
+      'salary_frequency': salaryFrequency?.name,
+      'salary_date': salaryDate?.toIso8601String(),
+      'password': password,
     };
   }
 
@@ -60,6 +64,7 @@ class User {
     double? salaryAmount,
     SalaryFrequency? salaryFrequency,
     DateTime? salaryDate,
+    String? password,
   }) {
     return User(
       id: id ?? this.id,
@@ -70,24 +75,7 @@ class User {
       salaryAmount: salaryAmount ?? this.salaryAmount,
       salaryFrequency: salaryFrequency ?? this.salaryFrequency,
       salaryDate: salaryDate ?? this.salaryDate,
+      password: password ?? this.password,
     );
   }
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is User &&
-          runtimeType == other.runtimeType &&
-          id == other.id &&
-          name == other.name &&
-          email == other.email &&
-          saldo == other.saldo &&
-          gender == other.gender &&
-          salaryAmount == other.salaryAmount &&
-          salaryFrequency == other.salaryFrequency &&
-          salaryDate == other.salaryDate;
-
-  @override
-  int get hashCode =>
-      id.hashCode ^ name.hashCode ^ email.hashCode ^ saldo.hashCode ^ gender.hashCode ^ salaryAmount.hashCode ^ salaryFrequency.hashCode ^ salaryDate.hashCode;
 }

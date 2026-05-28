@@ -1,70 +1,46 @@
 name: invezzte
 description: "A new Flutter project."
-# The following line prevents the package from being accidentally published to
-# pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-
-# The following defines the version and build number for your application.
-# A version number is three numbers separated by dots, like 1.2.43
-# followed by an optional build number separated by a +.
+publish_to: 'none'
 version: 1.0.0+1
 
 environment:
   sdk: ^3.10.8
 
-# Dependencies specify other packages that your package needs in order to work.
 dependencies:
   flutter:
     sdk: flutter
 
-  # Personal dependencies for Invezzte
   go_router: ^17.2.1
   fl_chart: ^0.68.0
   cupertino_icons: ^1.0.8
   provider: ^6.1.2
   get_it: ^8.0.0
+  http: ^1.6.0
+  sqflite: ^2.4.2+1
+  path: ^1.9.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
-  # The "flutter_lints" package below contains a set of recommended lints.
   flutter_lints: ^3.0.0
-  
-  # Package to generate launcher icons
   flutter_launcher_icons: ^0.13.1
 
-# Flutter Launcher Icons configuration
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
   image_path: "assets/images/icon_invezzte.png"
 
-# For information on the generic Dart part of this file, see the
-# following page: https://dart.dev/tools/pub/pubspec
-
-# The following section is specific to Flutter packages.
 flutter:
-
-  # The following line ensures that the Material Icons font is included.
   uses-material-design: true
 
-  # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/icon_invezzte.png
     - assets/images/background_login.png
     - assets/images/logo.png
-  # An image asset can refer to one or more resolution-specific "variants".
-  # For details regarding adding assets from package dependencies, see
-  # https://flutter.dev/to/asset-from-package
 
-  # To add custom fonts to your application, add a fonts section here.
   fonts:
     - family: Poppins
       fonts:
         - asset: assets/fonts/Poppins-Regular.ttf
         - asset: assets/fonts/Poppins-Bold.ttf
           weight: 700
-
-  # For details regarding fonts from package dependencies,
-  # see https://flutter.dev/to/font-from-package

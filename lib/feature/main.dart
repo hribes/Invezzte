@@ -14,6 +14,7 @@ import 'package:invezzte/feature/login/Login.dart';
 import 'package:invezzte/feature/configuracao/CategoryCreate.dart';
 import 'package:invezzte/feature/cadastros/RegisterUser.dart';
 import 'package:invezzte/feature/configuracao/Category.dart';
+import 'package:invezzte/domain/notifiers/user_notifier.dart';
 import 'package:invezzte/domain/notifiers/historico_notifier.dart';
 import 'package:invezzte/domain/notifiers/categoria_notifier.dart';
 
@@ -69,9 +70,10 @@ class InvezzteApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // MultiProvider substitui o ChangeNotifierProvider único
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => sl<SaldoNotifier>()),
+        ChangeNotifierProvider(create: (_) => sl<UserProvider>()),
         ChangeNotifierProvider(create: (_) => sl<SaldoNotifier>()),
         ChangeNotifierProvider(create: (_) => sl<HistoricoNotifier>()),
         ChangeNotifierProvider(create: (_) => sl<CategoriaNotifier>()),

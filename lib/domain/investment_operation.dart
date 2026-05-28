@@ -17,25 +17,25 @@ class InvestmentOperation {
     required this.date,
   });
 
-  factory InvestmentOperation.fromJson(Map<String, dynamic> json) {
+  factory InvestmentOperation.fromMap(Map<String, dynamic> map) {
     return InvestmentOperation(
-      id: json['id'] as int,
-      assetId: json['assetId'] as int,
+      id: map['id_investment'] as int,
+      assetId: map['asset_id'] as int,
       operationType: OperationType.values.firstWhere(
-        (e) => e.name == json['operationType'],
+        (e) => e.name == map['operation_type'],
       ),
-      totalAmount: (json['totalAmount'] as num).toDouble(),
-      quantity: (json['quantity'] as num).toDouble(),
-      date: DateTime.parse(json['date'] as String),
+      totalAmount: (map['total_amount'] as num).toDouble(),
+      quantity: (map['quantity'] as num).toDouble(),
+      date: DateTime.parse(map['date'] as String),
     );
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     return {
-      'id': id,
-      'assetId': assetId,
-      'operationType': operationType.name,
-      'totalAmount': totalAmount,
+      'id_investment': id,
+      'asset_id': assetId,
+      'operation_type': operationType.name,
+      'total_amount': totalAmount,
       'quantity': quantity,
       'date': date.toIso8601String(),
     };
@@ -58,25 +58,4 @@ class InvestmentOperation {
       date: date ?? this.date,
     );
   }
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is InvestmentOperation &&
-          runtimeType == other.runtimeType &&
-          id == other.id &&
-          assetId == other.assetId &&
-          operationType == other.operationType &&
-          totalAmount == other.totalAmount &&
-          quantity == other.quantity &&
-          date == other.date;
-
-  @override
-  int get hashCode =>
-      id.hashCode ^
-      assetId.hashCode ^
-      operationType.hashCode ^
-      totalAmount.hashCode ^
-      quantity.hashCode ^
-      date.hashCode;
 }

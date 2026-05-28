@@ -5,7 +5,7 @@ class Category {
   final int userId;
   final String name;
   final String iconName; 
-  final String? colorHex; // Adicionado para suportar as cores do gráfico e UI
+  final String? colorHex;
 
   const Category({
     required this.id,
@@ -21,23 +21,21 @@ class Category {
       ? Color(int.parse(colorHex!.replaceAll('#', '0xff'))) 
       : Colors.grey;
 
-  factory Category.fromJson(Map<String, dynamic> json) {
+  factory Category.fromMap(Map<String, dynamic> map) {
     return Category(
-      id: json['id'] as int,
-      userId: json['userId'] as int,
-      name: json['name'] as String,
-      iconName: json['iconName'] as String? ?? 'help_outline', 
-      colorHex: json['colorHex'] as String?,
+      id: map['id_category'] as int,
+      userId: map['user_id'] as int,
+      name: map['name'] as String,
+      iconName: map['icon_name'] as String? ?? 'help_outline', 
     );
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     return {
-      'id': id,
-      'userId': userId,
+      'id_category': id,
+      'user_id': userId,
       'name': name,
-      'iconName': iconName,
-      'colorHex': colorHex,
+      'icon_name': iconName,
     };
   }
 
@@ -73,19 +71,4 @@ class Category {
       default: return Icons.help_outline;
     }
   }
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Category &&
-          runtimeType == other.runtimeType &&
-          id == other.id &&
-          userId == other.userId &&
-          name == other.name &&
-          iconName == other.iconName &&
-          colorHex == other.colorHex;
-
-  @override
-  int get hashCode =>
-      id.hashCode ^ userId.hashCode ^ name.hashCode ^ iconName.hashCode ^ colorHex.hashCode;
 }

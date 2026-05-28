@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart' hide SearchBar;
 import 'package:go_router/go_router.dart';
+import 'package:invezzte/domain/notifiers/user_notifier.dart';
 import 'package:provider/provider.dart';
 import 'package:invezzte/domain/notifiers/saldo_notifier.dart';
 import 'package:invezzte/domain/notifiers/historico_notifier.dart';
@@ -41,6 +42,7 @@ class _HomeInvezzteState extends State<HomeInvezzte> {
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserProvider>(context).currentUser;
     final saldoNotifier = context.watch<SaldoNotifier>();
     final categoriaNotifier = context.watch<CategoriaNotifier>();
     final historicoNotifier = context.watch<HistoricoNotifier>();
@@ -75,8 +77,8 @@ class _HomeInvezzteState extends State<HomeInvezzte> {
                       ),
                     )
                   : HomeHeaderSection(
-                      nomeUsuario: saldoNotifier.usuario.name,
-                      saldo: saldoNotifier.saldo,
+                      nomeUsuario: user?.name ?? 'Usuário',
+                      saldo: user?.saldo ?? 0.0,
                       isSaldoVisivel: _isSaldoVisivel,
                       onToggleSaldo: () =>
                           setState(() => _isSaldoVisivel = !_isSaldoVisivel),
