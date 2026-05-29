@@ -43,11 +43,15 @@ class CryptoCard extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.all(5.0),
                         decoration: const BoxDecoration(
-                          color: Color(0xFFFBB718),
+                          color: Color(
+                            0xFF360B7A,
+                          ), // Você também pode mudar essa cor se quiser
                           shape: BoxShape.circle,
                         ),
+                        // 👇 É SÓ MUDAR AQUI 👇
                         child: const Icon(
-                          Icons.currency_bitcoin,
+                          Icons
+                              .trending_up, // Substituído Icons.currency_bitcoin por Icons.trending_up
                           color: Color(0xffffffff),
                         ),
                       ),
@@ -86,7 +90,10 @@ class CryptoCard extends StatelessWidget {
                 ],
               ),
             ),
-            const Padding(padding: EdgeInsetsGeometry.all(15), child: Graphic()),
+            const Padding(
+              padding: EdgeInsetsGeometry.all(15),
+              child: Graphic(),
+            ),
           ],
         ),
       ),
