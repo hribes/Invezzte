@@ -8,8 +8,6 @@ class Transaction {
   final double amount;
   final DateTime date;
   final TransactionType type;
-  final TransactionTag tag; 
-  final TransactionStatus status;
 
   const Transaction({
     required this.id,
@@ -19,8 +17,6 @@ class Transaction {
     required this.amount,
     required this.date,
     required this.type,
-    required this.tag,
-    this.status = TransactionStatus.paid,
   });
 
   factory Transaction.fromMap(Map<String, dynamic> map) {
@@ -32,8 +28,6 @@ class Transaction {
       amount: (map['amount'] as num).toDouble(),
       date: DateTime.parse(map['date'] as String),
       type: TransactionType.values.firstWhere((e) => e.name == map['type']),
-      tag: TransactionTag.values.firstWhere((e) => e.name == map['tag']),
-      status: TransactionStatus.values.firstWhere((e) => e.name == map['status'], orElse: () => TransactionStatus.paid),
     );
   }
 
@@ -46,8 +40,6 @@ class Transaction {
       'amount': amount,
       'date': date.toIso8601String(),
       'type': type.name,
-      'tag': tag.name,
-      'status': status.name,
     };
   }
 
@@ -70,8 +62,6 @@ class Transaction {
       amount: amount ?? this.amount,
       date: date ?? this.date,
       type: type ?? this.type,
-      tag: tag ?? this.tag,
-      status: status ?? this.status,
     );
   }
 }
