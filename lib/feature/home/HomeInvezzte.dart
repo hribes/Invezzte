@@ -56,6 +56,8 @@ class _HomeInvezzteState extends State<HomeInvezzte> {
         return Icons.school;
       case 'entertainment':
         return Icons.live_tv;
+      case 'attach_money':             
+        return Icons.attach_money;
       default:
         return Icons.help_outline;
     }

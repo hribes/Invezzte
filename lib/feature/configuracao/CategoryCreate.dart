@@ -26,6 +26,8 @@ class _CategoryCreateState extends State<CategoryCreate> {
     {'name': 'account_balance_wallet', 'icon': Icons.account_balance_wallet},
     {'name': 'fitness_center', 'icon': Icons.fitness_center},
     {'name': 'local_hospital', 'icon': Icons.local_hospital},
+    {'name': 'attach_money', 'icon': Icons.attach_money}
+    
   ];
 
   late String _selectedIconName;

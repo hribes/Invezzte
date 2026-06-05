@@ -67,6 +67,7 @@ class _HistoryState extends State<History> {
       case 'plane': return Icons.flight;
       case 'school': return Icons.school;
       case 'entertainment': return Icons.live_tv;
+      case 'attach_money': return Icons.attach_money;
       default: return Icons.help_outline;
     }
   }

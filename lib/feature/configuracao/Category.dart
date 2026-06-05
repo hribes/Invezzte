@@ -70,6 +70,7 @@ class CategoryItem extends StatelessWidget {
       case 'account_balance_wallet': return Icons.account_balance_wallet;
       case 'fitness_center': return Icons.fitness_center;
       case 'local_hospital': return Icons.local_hospital;
+      case 'attach_money': return Icons.attach_money;
       default: return Icons.help_outline;
     }
   }

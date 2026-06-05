@@ -15,13 +15,13 @@ class AddOptionsSheet extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min, 
         children: [
-          _buildOption(Icons.cut, "Cadastrar Despesas", () {
+          _buildOption(Icons.cut, "Adicionar Despesas", () {
             Navigator.pop(context); 
             context.push('/add-expense');
           }),
           const Divider(),
           
-          _buildOption(Icons.payments_outlined, "Adicionar Saldo", () {
+          _buildOption(Icons.payments_outlined, "Adicionar Recebimento", () {
             Navigator.pop(context); 
             context.push('/add-balance');
           }),
