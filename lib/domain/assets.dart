@@ -32,15 +32,20 @@ class Asset {
   }
 
   Map<String, dynamic> toMap() {
-    return {
-      'id_asset': id,
+    final map = {
       'user_id': userId,
       'ticker': ticker,
       'name': name,
-      'is_staking': isStaking ? 1 : 0, // SQLite boolean
+      'is_staking': isStaking ? 1 : 0,
       'current_price': currentPrice,
       'last_price_update': lastPriceUpdate?.toIso8601String(),
     };
+
+    if (id != 0) {
+      map['id_asset'] = id;
+    }
+
+    return map;
   }
 
   Asset copyWith({

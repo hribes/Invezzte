@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart'; // Adicionado para a navegação!
+import 'package:invezzte/domain/category.dart';
 import 'package:invezzte/domain/notifiers/categoria_notifier.dart';
+import 'package:invezzte/domain/notifiers/historico_notifier.dart';
 import 'package:invezzte/feature/widgets/HeaderScreens.dart';
 
 class Categories extends StatelessWidget {
@@ -37,7 +40,7 @@ class Categories extends StatelessWidget {
                   itemCount: categorias.length,
                   itemBuilder: (context, index) {
                     final cat = categorias[index];
-                    return CategoryItem(title: cat.name, icon: cat.icon);
+                    return CategoryItem(categoria: cat);
                   },
                 ),
               ),
@@ -49,15 +52,58 @@ class Categories extends StatelessWidget {
   }
 }
 
-// DEFINIÇÃO DO WIDGET AQUI NO MESMO ARQUIVO
 class CategoryItem extends StatelessWidget {
-  final String title;
-  final IconData icon;
+  final Category categoria; 
 
-  const CategoryItem({super.key, required this.title, required this.icon});
+  const CategoryItem({super.key, required this.categoria});
+
+  IconData _getIconData(String iconName) {
+    switch (iconName) {
+      case 'home': return Icons.home;
+      case 'directions_car': return Icons.directions_car;
+      case 'school': return Icons.school;
+      case 'work': return Icons.work;
+      case 'entertainment': return Icons.live_tv;
+      case 'plane': return Icons.flight;
+      case 'shopping_cart': return Icons.shopping_cart;
+      case 'restaurant': return Icons.restaurant;
+      case 'account_balance_wallet': return Icons.account_balance_wallet;
+      case 'fitness_center': return Icons.fitness_center;
+      case 'local_hospital': return Icons.local_hospital;
+      default: return Icons.help_outline;
+    }
+  }
+
+  void _tentarDeletar(BuildContext context) {
+    final historicoNotifier = context.read<HistoricoNotifier>();
+    
+    final estaEmUso = historicoNotifier.transacoes.any(
+      (t) => t.categoryId == categoria.id
+    );
+
+    if (estaEmUso) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Não é possível excluir. Existem transações usando esta categoria.'),
+          backgroundColor: Colors.orange,
+        ),
+      );
+    } else {
+      context.read<CategoriaNotifier>().deletarCategoria(categoria.id);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Categoria apagada com sucesso.'),
+          backgroundColor: Colors.redAccent,
+        ),
+      );
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
+    final bool isReceitas = categoria.name == 'Receitas';
+
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(12),
@@ -80,12 +126,17 @@ class CategoryItem extends StatelessWidget {
               color: const Color(0xFF8B66FF),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(icon, color: Colors.white, size: 28),
+
+            child: Icon(
+              isReceitas ? Icons.attach_money : _getIconData(categoria.iconName), 
+              color: Colors.white, 
+              size: 28
+            ),
           ),
           const SizedBox(width: 16),
           Expanded(
             child: Text(
-              title,
+              categoria.name,
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
@@ -93,14 +144,23 @@ class CategoryItem extends StatelessWidget {
               ),
             ),
           ),
-          IconButton(
-            icon: const Icon(Icons.delete_outline, color: Color(0xFF8B66FF)),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: const Icon(Icons.edit_outlined, color: Color(0xFFFFC107)),
-            onPressed: () {},
-          ),
+          if (isReceitas)
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.0),
+              child: Icon(Icons.lock_outline, color: Colors.grey, size: 24),
+            )
+          else ...[
+            IconButton(
+              icon: const Icon(Icons.delete_outline, color: Color(0xFF8B66FF)),
+              onPressed: () => _tentarDeletar(context),
+            ),
+            IconButton(
+              icon: const Icon(Icons.edit_outlined, color: Color(0xFFFFC107)),
+              onPressed: () {
+                context.push('/create-category', extra: categoria); 
+              },
+            ),
+          ],
         ],
       ),
     );

@@ -61,6 +61,9 @@ class ProfileConfiguration extends StatelessWidget {
                       icon: Icons.folder_open,
                       title: "Editar Informações Pessoais",
                       subtitle: "Nome, E-mail, Gênero, Salário",
+                      onTap: () {
+                        context.push('/profile-user');
+                      },
                     ),
                     const Divider(),
 
@@ -91,13 +94,11 @@ class ProfileConfiguration extends StatelessWidget {
 
                     GestureDetector(
                       onTap: () {
-                        // 1. Acessa o Provider e limpa o usuário (sem ficar escutando a mudança aqui)
                         Provider.of<UserProvider>(
                           context,
                           listen: false,
                         ).logout();
 
-                        // 2. Joga o usuário de volta para a tela inicial/login
                         context.go('/login');
                       },
                       child: Container(

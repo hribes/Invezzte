@@ -31,14 +31,19 @@ class InvestmentOperation {
   }
 
   Map<String, dynamic> toMap() {
-    return {
-      'id_investment': id,
+    final map = {
       'asset_id': assetId,
       'operation_type': operationType.name,
       'total_amount': totalAmount,
       'quantity': quantity,
       'date': date.toIso8601String(),
     };
+
+    if (id != 0) {
+      map['id_investment'] = id;
+    }
+
+    return map;
   }
 
   InvestmentOperation copyWith({

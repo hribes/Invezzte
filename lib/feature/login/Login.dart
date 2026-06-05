@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:invezzte/feature/widgets/InputField.dart';
 import 'package:provider/provider.dart';
 import 'package:invezzte/domain/notifiers/user_notifier.dart';
+import 'package:invezzte/domain/notifiers/categoria_notifier.dart';
+import 'package:invezzte/domain/notifiers/historico_notifier.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -41,9 +43,23 @@ class _LoginState extends State<Login> {
       setState(() => _isLoading = false);
 
       if (sucesso) {
+        final userId = userProvider.currentUser!.id;
+
+        final categoriaProvider = Provider.of<CategoriaNotifier>(context, listen: false);
+        final historicoProvider = Provider.of<HistoricoNotifier>(context, listen: false);
+
+        await categoriaProvider.carregarCategoriasDoBanco(userId);
+        await historicoProvider.carregarTransacoesDoBanco(userId);
+
         context.go('/home');
       } else {
-        
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('E-mail ou senha incorretos.'),
+            backgroundColor: Colors.redAccent,
+          ),
+        );
       }
     }
   }

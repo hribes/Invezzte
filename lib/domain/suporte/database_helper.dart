@@ -17,6 +17,10 @@ class DatabaseHelper {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
 
+  print("=========================================");
+  print("O SEU BANCO DE DADOS ESTÁ EM: $path");
+  print("=========================================");
+
     return await openDatabase(
       path,
       version: 1,
@@ -38,14 +42,12 @@ class DatabaseHelper {
     // 1. User
     await db.execute('''
       CREATE TABLE User (
-        id_user INTEGER PRIMARY KEY,
+        id_user $idType,
         name $textType,
         email $textType,
         gender TEXT,
         saldo $realType DEFAULT 0.0,
-        salary_amount REAL,
-        salary_frequency TEXT,
-        salary_date TEXT,
+        patrimony $realType DEFAULT 0.0,
         password TEXT
       )
     ''');
@@ -68,7 +70,6 @@ class DatabaseHelper {
         user_id INTEGER NOT NULL,
         ticker $textType,
         name $textType,
-        asset_class $textType,
         is_staking $boolType,
         current_price REAL,
         last_price_update TEXT,
@@ -89,19 +90,7 @@ class DatabaseHelper {
       )
     ''');
 
-    // 5. Recurring_Expense
-    await db.execute('''
-      CREATE TABLE Recurring_Expense (
-        id_recurring $idType,
-        user_id INTEGER NOT NULL,
-        expected_amount $realType,
-        category_id INTEGER NOT NULL,
-        FOREIGN KEY (user_id) REFERENCES User (id_user) ON DELETE CASCADE,
-        FOREIGN KEY (category_id) REFERENCES Category (id_category) ON DELETE CASCADE
-      )
-    ''');
-
-    // 6. Transaction
+    // 5. Transaction
     await db.execute('''
       CREATE TABLE "Transaction" (
         id_transaction $idType,
@@ -111,8 +100,6 @@ class DatabaseHelper {
         amount $realType,
         date $textType,
         type $textType,
-        tag $textType,
-        status $textType,
         FOREIGN KEY (user_id) REFERENCES User (id_user) ON DELETE CASCADE,
         FOREIGN KEY (category_id) REFERENCES Category (id_category) ON DELETE CASCADE
       )

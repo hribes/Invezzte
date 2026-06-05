@@ -14,11 +14,10 @@ class SpendingFilterList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 1. Escuta as alterações do CategoriaNotifier
     final categoriaNotifier = context.watch<CategoriaNotifier>();
+    final categoriasDespesa = categoriaNotifier.categorias.where((cat) => cat.name != 'Receitas').toList();
     
-    // 2. Cria a lista de nomes dinamicamente, mantendo o "Todas" como opção inicial
-    final List<String> filters = ['Todas', ...categoriaNotifier.categorias.map((c) => c.name)];
+    final List<String> filters = ['Todas', ...categoriasDespesa.map((c) => c.name)];
 
     return SizedBox(
       height: 36,

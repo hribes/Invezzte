@@ -10,16 +10,12 @@ class SaldoNotifier extends ChangeNotifier {
   bool get carregando => _carregando;
 
   User? get usuario => sl<UserProvider>().currentUser;
-  double get saldo => sl<UserProvider>().currentUser?.saldo ?? 0.0;
+  double get saldo => sl<UserProvider>().currentUser?.balance ?? 0.0;
 
-  Future<void> carregarSaldo() async {
+ Future<void> carregarSaldo() async {
     _carregando = true;
     notifyListeners();
-
-    final repository = sl<SaldoRepository>();
-    final saldoBuscado = await repository.buscarSaldo();
-
-    sl<UserProvider>().atualizarSaldo(saldoBuscado);
+    await Future.delayed(const Duration(milliseconds: 300)); 
     
     _carregando = false;
     notifyListeners();
@@ -29,7 +25,7 @@ class SaldoNotifier extends ChangeNotifier {
     final repository = sl<SaldoRepository>();
     await repository.salvarSaldo(valor);
 
-    final saldoAtual = sl<UserProvider>().currentUser?.saldo ?? 0.0;
+    final saldoAtual = sl<UserProvider>().currentUser?.balance ?? 0.0;
     sl<UserProvider>().atualizarSaldo(saldoAtual + valor);
 
     notifyListeners(); 
@@ -39,7 +35,7 @@ Future<void> retirarSaldo(double valor) async {
     final repository = sl<SaldoRepository>();
     await repository.salvarSaldo(-valor); 
 
-    final saldoAtual = sl<UserProvider>().currentUser?.saldo ?? 0.0;
+    final saldoAtual = sl<UserProvider>().currentUser?.balance ?? 0.0;
     
     sl<UserProvider>().atualizarSaldo(saldoAtual - valor);
     

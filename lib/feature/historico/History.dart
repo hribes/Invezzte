@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:invezzte/feature/widgets/CategorySelector.dart';
 import 'package:invezzte/feature/widgets/HeaderScreens.dart';
 import 'package:invezzte/feature/widgets/InfoCard.dart';
 import 'package:invezzte/feature/widgets/NavBar.dart';
-import 'package:provider/provider.dart';
 import 'package:invezzte/domain/notifiers/historico_notifier.dart';
 import 'package:invezzte/domain/notifiers/categoria_notifier.dart';
+import 'package:invezzte/domain/notifiers/user_notifier.dart';
+import 'package:invezzte/domain/notifiers/saldo_notifier.dart';
+import 'package:invezzte/domain/transaction.dart';
+import 'package:invezzte/domain/enums.dart';
+import 'package:invezzte/domain/category.dart'; 
 
 class History extends StatefulWidget {
   final String? initialCategoryName;
@@ -27,7 +32,6 @@ class _HistoryState extends State<History> {
   @override
   void didUpdateWidget(covariant History oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // Se o nome da categoria vinda por parâmetro mudar, atualiza o filtro
     if (oldWidget.initialCategoryName != widget.initialCategoryName) {
       _atualizarFiltroPeloParametro();
     }
@@ -41,13 +45,52 @@ class _HistoryState extends State<History> {
           (c) => c.name == widget.initialCategoryName,
         );
 
-        if (index != -1 && index != _selectedCategoryIndex) {
+        if (index != -1 && (index + 1) != _selectedCategoryIndex) {
           setState(() {
-            _selectedCategoryIndex = index;
+            _selectedCategoryIndex = index + 1;
           });
         }
       });
     }
+  }
+
+  IconData _getIconData(String iconName) {
+    switch (iconName) {
+      case 'home': return Icons.home;
+      case 'directions_car': return Icons.directions_car;
+      case 'shopping_cart': return Icons.shopping_cart;
+      case 'restaurant': return Icons.restaurant;
+      case 'work': return Icons.work;
+      case 'account_balance_wallet': return Icons.account_balance_wallet;
+      case 'fitness_center': return Icons.fitness_center;
+      case 'local_hospital': return Icons.local_hospital;
+      case 'plane': return Icons.flight;
+      case 'school': return Icons.school;
+      case 'entertainment': return Icons.live_tv;
+      default: return Icons.help_outline;
+    }
+  }
+
+  Future<void> _deletarTransacao(Transaction t) async {
+    final userProvider = context.read<UserProvider>();
+    final saldoAtual = userProvider.currentUser!.balance ?? 0.0;
+
+    final novoSaldo = t.type == TransactionType.expense
+        ? saldoAtual + t.amount
+        : saldoAtual - t.amount;
+
+    await userProvider.atualizarSaldo(novoSaldo);
+    await context.read<HistoricoNotifier>().deletarTransacao(t.id, t.userId);
+    await context.read<SaldoNotifier>().carregarSaldo();
+
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Transação apagada com sucesso.'),
+        backgroundColor: Colors.redAccent,
+        duration: Duration(seconds: 2),
+      ),
+    );
   }
 
   @override
@@ -59,11 +102,32 @@ class _HistoryState extends State<History> {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    final categoriaAtual = categoriaNotifier.categorias[_selectedCategoryIndex];
+    final listaBotoes = [
+      CategoryItem(title: 'Todas', icon: Icons.list_alt),
+      ...categoriaNotifier.categorias.map((c) => CategoryItem(
+            title: c.name,
+            icon: _getIconData(c.iconName),
+          ))
+    ];
 
-    final transacoes = historicoNotifier.transacoes
-        .where((t) => t.categoryId == categoriaAtual.id)
-        .toList();
+    if (_selectedCategoryIndex >= listaBotoes.length) {
+      _selectedCategoryIndex = 0;
+    }
+
+    List<Transaction> transacoesExibidas;
+    String tituloSessao;
+
+    if (_selectedCategoryIndex == 0) {
+      transacoesExibidas = historicoNotifier.transacoes;
+      tituloSessao = 'Todas as Transações';
+    } else {
+
+      final categoriaAtual = categoriaNotifier.categorias[_selectedCategoryIndex - 1];
+      transacoesExibidas = historicoNotifier.transacoes
+          .where((t) => t.categoryId == categoriaAtual.id)
+          .toList();
+      tituloSessao = categoriaAtual.name;
+    }
 
     return Scaffold(
       backgroundColor: const Color(0xFFFAFAFA),
@@ -78,9 +142,7 @@ class _HistoryState extends State<History> {
               const SizedBox(height: 30),
 
               CategorySelector(
-                categories: categoriaNotifier.categorias
-                    .map((c) => CategoryItem(title: c.name, icon: c.icon))
-                    .toList(),
+                categories: listaBotoes,
                 selectedIndex: _selectedCategoryIndex,
                 onCategorySelected: (index) =>
                     setState(() => _selectedCategoryIndex = index),
@@ -89,23 +151,56 @@ class _HistoryState extends State<History> {
               const SizedBox(height: 30),
 
               Text(
-                categoriaAtual.name,
+                tituloSessao,
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
 
-              const SizedBox(height: 16),
+            const SizedBox(height: 16),
 
-              // LISTA DE TRANSAÇÕES
-              ...transacoes.map((t) {
-                return InfoCard(
-                  title: t.title,
-                  date: "${t.date.day}/${t.date.month}/${t.date.year}",
-                  icon: categoriaAtual.icon,
-                  amount: t.amount,
-                  type: t.type,
+              if (transacoesExibidas.isEmpty)
+                const Center(
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 40.0),
+                    child: Text(
+                      "Nenhuma transação encontrada.",
+                      style: TextStyle(color: Colors.grey, fontSize: 16),
+                    ),
+                  ),
+                ),
+
+              ...transacoesExibidas.map((t) {
+      
+                final categoriaDaTransacao = categoriaNotifier.categorias.firstWhere(
+                  (c) => c.id == t.categoryId,
+                  orElse: () => const Category(id: 0, userId: 0, name: 'Outros', iconName: 'help_outline')
+                );
+
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 5.0),
+                  child: Dismissible(
+                    key: Key(t.id.toString()),
+                    direction: DismissDirection.endToStart,
+                    background: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.redAccent,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      alignment: Alignment.centerRight,
+                      padding: const EdgeInsets.only(right: 20),
+                      child: const Icon(Icons.delete, color: Colors.white),
+                    ),
+                    onDismissed: (direction) => _deletarTransacao(t),
+                    child: InfoCard(
+                      title: t.title,
+                      date: "${t.date.day.toString().padLeft(2, '0')}/${t.date.month.toString().padLeft(2, '0')}/${t.date.year}",
+                      icon: _getIconData(categoriaDaTransacao.iconName), 
+                      amount: t.amount,
+                      type: t.type,
+                    ),
+                  ),
                 );
               }),
             ],

@@ -25,12 +25,17 @@ class Category {
   }
 
   Map<String, dynamic> toMap() {
-    return {
-      'id_category': id,
+    final map = {
       'user_id': userId,
       'name': name,
       'icon_name': iconName,
     };
+
+    if (id != 0) {
+      map['id_category'] = id; // Substitua pelo nome exato da sua coluna de ID da categoria
+    }
+
+    return map;
   }
 
   Category copyWith({int? id, int? userId, String? name, String? iconName}) {

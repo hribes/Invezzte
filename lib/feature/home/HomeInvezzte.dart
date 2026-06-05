@@ -9,6 +9,7 @@ import 'package:invezzte/feature/widgets/NavBar.dart';
 import 'package:invezzte/feature/home/widgets/home_header_section.dart';
 import 'package:invezzte/feature/home/widgets/home_history_categories.dart';
 import 'package:invezzte/feature/home/widgets/home_upcoming_payments.dart';
+import 'package:invezzte/domain/category.dart';
 
 class HomeInvezzte extends StatefulWidget {
   const HomeInvezzte({super.key});
@@ -24,20 +25,28 @@ class _HomeInvezzteState extends State<HomeInvezzte> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
-        context.read<SaldoNotifier>().carregarSaldo();
+    if (mounted) {
+      context.read<SaldoNotifier>().carregarSaldo();
+      context.read<HistoricoNotifier>().inicializarHistorico();
+    }
+    }); 
+  }
 
-        final catNotifier = context.read<CategoriaNotifier>();
-        if (catNotifier.categorias.isEmpty) {
-          catNotifier.carregarCategoriasMock();
-        }
-
-        final histNotifier = context.read<HistoricoNotifier>();
-        if (histNotifier.transacoes.isEmpty) {
-          histNotifier.carregarDadosMock();
-        }
-      }
-    });
+  IconData _getIconData(String iconName) {
+    switch (iconName) {
+      case 'home': return Icons.home;
+      case 'directions_car': return Icons.directions_car;
+      case 'shopping_cart': return Icons.shopping_cart;
+      case 'restaurant': return Icons.restaurant;
+      case 'work': return Icons.work;
+      case 'account_balance_wallet': return Icons.account_balance_wallet;
+      case 'fitness_center': return Icons.fitness_center;
+      case 'local_hospital': return Icons.local_hospital;
+      case 'plane': return Icons.flight;
+      case 'school': return Icons.school;
+      case 'entertainment': return Icons.live_tv;
+      default: return Icons.help_outline; 
+    }
   }
 
   @override
@@ -45,21 +54,10 @@ class _HomeInvezzteState extends State<HomeInvezzte> {
     final user = Provider.of<UserProvider>(context).currentUser;
     final saldoNotifier = context.watch<SaldoNotifier>();
     final categoriaNotifier = context.watch<CategoriaNotifier>();
-    final historicoNotifier = context.watch<HistoricoNotifier>();
 
-    // Mapeamento mantendo a estrutura esperada pelo widget HomeHistoryCategories
     final categoriasFormatadas = categoriaNotifier.categorias
-        .map((cat) => {'icon': cat.icon, 'label': cat.name})
+        .map((cat) => {'icon': _getIconData(cat.iconName), 'label': cat.name})
         .toList();
-
-    final proximosPagamentos = historicoNotifier.transacoes.map((t) {
-      return {
-        'title': t.title,
-        'date': "${t.date.day}/${t.date.month}/${t.date.year}",
-        'amount': t.amount,
-        'icon': Icons.attach_money,
-      };
-    }).toList();
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -78,7 +76,7 @@ class _HomeInvezzteState extends State<HomeInvezzte> {
                     )
                   : HomeHeaderSection(
                       nomeUsuario: user?.name ?? 'Usuário',
-                      saldo: user?.saldo ?? 0.0,
+                      saldo: user?.balance ?? 0.0,
                       isSaldoVisivel: _isSaldoVisivel,
                       onToggleSaldo: () =>
                           setState(() => _isSaldoVisivel = !_isSaldoVisivel),
@@ -89,7 +87,6 @@ class _HomeInvezzteState extends State<HomeInvezzte> {
 
               const SizedBox(height: 30),
 
-              // Ao clicar, o GoRouter agora envia o nome da categoria como parâmetro de consulta
               HomeHistoryCategories(
                 categorias: categoriasFormatadas,
                 onVerTudoPressed: () => context.push('/history'),
@@ -98,15 +95,69 @@ class _HomeInvezzteState extends State<HomeInvezzte> {
                 },
               ),
 
-              const SizedBox(height: 35),
-
-              HomeUpcomingPayments(
-                pagamentos: proximosPagamentos,
-                onVerMaisPressed: () => context.push('/history'),
-                onPagamentoPressed: (String titulo) {
-                  context.push('/detalhe_pagamento/$titulo');
-                },
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24),
+                child: Text("Movimentações recentes", 
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               ),
+              const SizedBox(height: 15),
+                  Consumer<HistoricoNotifier>(
+                  builder: (context, historico, child) {
+                    final ultimasMovimentacoes = List.of(historico.transacoes)
+                      ..sort((a, b) {
+                        final dataCompare = b.date.compareTo(a.date);
+
+                        if (dataCompare != 0) {
+                          return dataCompare;
+                        }
+
+                        return b.id.compareTo(a.id);
+                      });
+
+                    final movimentacoesExibidas =
+                        ultimasMovimentacoes.take(5).toList();
+
+                    if (movimentacoesExibidas.isEmpty) {
+                      return const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 24),
+                        child: Text(
+                          "Realize alguma movimentação para visualizar",
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                      );
+                    }
+
+                    final lista = movimentacoesExibidas.map((t) {
+                      final cat = categoriaNotifier.categorias.firstWhere(
+                        (c) => c.id == t.categoryId,
+                        orElse: () => const Category(
+                          id: 0,
+                          userId: 0,
+                          name: 'Outros',
+                          iconName: 'help_outline',
+                        ),
+                      );
+
+                      return <String, dynamic>{
+                        'title': t.title,
+                        'date':
+                            "${t.date.day.toString().padLeft(2, '0')}/${t.date.month.toString().padLeft(2, '0')}/${t.date.year}",
+                        'amount': t.amount,
+                        'icon': _getIconData(cat.iconName),
+                      };
+                    }).toList();
+
+                    return HomeUpcomingPayments(
+                      pagamentos: lista,
+                      onVerMaisPressed: () => context.push('/history'),
+                      onPagamentoPressed: (String titulo) {},
+                    );
+                  },
+                ),
+
               const SizedBox(height: 20),
             ],
           ),

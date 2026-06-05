@@ -52,20 +52,18 @@ class User {
     int? id,
     String? name,
     String? email,
-    double? saldo,
+    double? balance,
+    double? patrimony,
     Gender? gender,
-    double? salaryAmount,
-    SalaryFrequency? salaryFrequency,
-    DateTime? salaryDate,
     String? password,
   }) {
     return User(
       id: id ?? this.id,
       name: name ?? this.name,
       email: email ?? this.email,
-      balance: saldo ?? this.balance,
-      gender: gender ?? this.gender,
+      balance: balance ?? this.balance,
       patrimony: patrimony ?? this.patrimony,
+      gender: gender ?? this.gender,
       password: password ?? this.password,
     );
   }

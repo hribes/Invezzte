@@ -6,6 +6,13 @@ import 'package:invezzte/feature/widgets/HeaderForm.dart';
 import 'package:invezzte/feature/widgets/InputField.dart';
 import 'package:invezzte/domain/suporte/Validacoes.dart';
 import 'package:invezzte/domain/suporte/MoedaFormatter.dart';
+import 'package:invezzte/domain/notifiers/user_notifier.dart';
+import 'package:invezzte/domain/notifiers/historico_notifier.dart';
+import 'package:invezzte/domain/notifiers/categoria_notifier.dart';
+import 'package:invezzte/domain/transaction.dart';
+import 'package:invezzte/domain/enums.dart';
+import 'package:invezzte/domain/category.dart';
+
 
 class AddBalance extends StatefulWidget {
   const AddBalance({super.key});
@@ -16,7 +23,7 @@ class AddBalance extends StatefulWidget {
 
 class _AddBalanceState extends State<AddBalance> {
   final _formKey = GlobalKey<FormState>();
-
+  late double _saldoOriginal;
   final _valorController = TextEditingController();
   final _tituloController = TextEditingController();
   final _dateController = TextEditingController();
@@ -30,6 +37,7 @@ class _AddBalanceState extends State<AddBalance> {
     _dateController.text = dataFormatada;
 
     _valorController.addListener(_atualizarPreview);
+    _saldoOriginal = context.read<SaldoNotifier>().saldo;
   }
 
   void _atualizarPreview() {
@@ -74,7 +82,7 @@ class _AddBalanceState extends State<AddBalance> {
     }
   }
 
-  void _salvarSaldo() {
+Future<void> _salvarSaldo() async {
     if (_formKey.currentState!.validate()) {
       final valorTexto = _valorController.text
           .replaceAll('.', '')
@@ -82,8 +90,46 @@ class _AddBalanceState extends State<AddBalance> {
 
       final valor = double.tryParse(valorTexto) ?? 0.0;
 
-      context.read<SaldoNotifier>().adicionarSaldo(valor);
+      final partesData = _dateController.text.split('/');
+      final dataSelecionada = DateTime(
+        int.parse(partesData[2]),
+        int.parse(partesData[1]),
+        int.parse(partesData[0]),
+      );
 
+      final userProvider = context.read<UserProvider>();
+      final userId = userProvider.currentUser!.id;
+      final categoriaNotifier = context.read<CategoriaNotifier>();
+
+      int idCategoriaReceita = 0;
+      
+      try {
+        idCategoriaReceita = categoriaNotifier.categorias.firstWhere((c) => c.name == 'Receitas').id;
+      } catch (e) {
+        final novaCategoria = Category(
+          id: 0,
+          userId: userId,
+          name: 'Receitas',
+          iconName: 'attach_money', 
+        );
+        
+        await categoriaNotifier.addCategory(novaCategoria);
+        idCategoriaReceita = categoriaNotifier.categorias.last.id; 
+      }
+
+  final novaTransacao = Transaction(
+      id: 0, 
+      userId: userId,
+      categoryId: idCategoriaReceita, 
+      title: _tituloController.text,
+      amount: valor,
+      date: dataSelecionada,
+      type: TransactionType.income, 
+    );
+
+    await context.read<HistoricoNotifier>().adicionarTransacao(novaTransacao);
+
+      if (!mounted) return;
       Navigator.of(context).pop();
     }
   }
@@ -91,13 +137,12 @@ class _AddBalanceState extends State<AddBalance> {
   @override
   Widget build(BuildContext context) {
 
-    final saldoReal = context.watch<SaldoNotifier>().saldo;
     final valorTexto = _valorController.text
         .replaceAll('.', '')
         .replaceAll(',', '.');
     final valorDigitado = double.tryParse(valorTexto) ?? 0.0;
 
-    final saldoPreview = saldoReal + valorDigitado;
+    final saldoPreview = _saldoOriginal + valorDigitado;
     final partes = saldoPreview.toStringAsFixed(2).split('.');
     final inteiro = partes[0];
     final decimal = ',${partes[1]}';
@@ -120,7 +165,7 @@ class _AddBalanceState extends State<AddBalance> {
           child: Column(
             children: [
               Headerform(
-                title: "Adicionar Saldo",
+                title: "Adicionar Recebimento",
                 balanceInteger: inteiro,
                 balanceDecimal: decimal,
               ),

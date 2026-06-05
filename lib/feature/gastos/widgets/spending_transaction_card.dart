@@ -52,7 +52,7 @@ class SpendingTransactionCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Vencimento: $dueDate',
+                  dueDate,
                   style: const TextStyle(
                     fontSize: 12,
                     color: Colors.grey,

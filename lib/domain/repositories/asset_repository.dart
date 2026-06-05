@@ -1,6 +1,6 @@
 import 'package:sqflite/sqflite.dart';
-import '../assets.dart'; // Mantido como assets.dart conforme seu arquivo
-import '../suporte/database_helper.dart';
+import 'package:invezzte/domain/assets.dart';
+import 'package:invezzte/domain/suporte/database_helper.dart';
 
 class AssetRepository {
   final DatabaseHelper _dbHelper;
@@ -12,17 +12,24 @@ class AssetRepository {
     return await db.insert('Asset', asset.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
-  Future<Asset?> getById(int id) async {
-    final db = await _dbHelper.database;
-    final maps = await db.query('Asset', where: 'id_asset = ?', whereArgs: [id]);
-    if (maps.isNotEmpty) return Asset.fromMap(maps.first);
-    return null;
-  }
-
   Future<List<Asset>> getByUserId(int userId) async {
     final db = await _dbHelper.database;
     final maps = await db.query('Asset', where: 'user_id = ?', whereArgs: [userId]);
     return maps.map((map) => Asset.fromMap(map)).toList();
+  }
+
+  Future<Asset?> getByTickerAndUserId(String ticker, int userId) async {
+    final db = await _dbHelper.database;
+    final maps = await db.query(
+      'Asset', 
+      where: 'ticker = ? AND user_id = ?', 
+      whereArgs: [ticker, userId]
+    );
+    
+    if (maps.isNotEmpty) {
+      return Asset.fromMap(maps.first);
+    }
+    return null;
   }
 
   Future<int> update(Asset asset) async {

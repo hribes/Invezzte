@@ -2,6 +2,7 @@ import 'package:sqflite/sqflite.dart';
 import '../user.dart';
 import '../suporte/database_helper.dart';
 
+
 class UserRepository {
   final DatabaseHelper _dbHelper;
 
@@ -33,5 +34,17 @@ class UserRepository {
   Future<int> delete(int id) async {
     final db = await _dbHelper.database;
     return await db.delete('User', where: 'id_user = ?', whereArgs: [id]);
+  }
+
+  Future<User?> getByCredentials(String email, String password) async {
+    final db = await _dbHelper.database;
+    final maps = await db.query(
+      'User', 
+      where: 'email = ? AND password = ?', 
+      whereArgs: [email, password]
+    );
+    
+    if (maps.isNotEmpty) return User.fromMap(maps.first);
+    return null; 
   }
 }

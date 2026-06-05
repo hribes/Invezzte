@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class HomeUpcomingPayments extends StatelessWidget {
+class HomeUpcomingPayments extends StatefulWidget {
   final List<Map<String, dynamic>>? pagamentos;
   final VoidCallback onVerMaisPressed;
   final Function(String) onPagamentoPressed;
@@ -13,38 +13,41 @@ class HomeUpcomingPayments extends StatelessWidget {
   });
 
   @override
+  State<HomeUpcomingPayments> createState() => _HomeUpcomingPaymentsState();
+}
+
+class _HomeUpcomingPaymentsState extends State<HomeUpcomingPayments> {
+  late List<Map<String, dynamic>> _listaAtual;
+
+  @override
+  void initState() {
+    super.initState();
+    _listaAtual = widget.pagamentos ?? [];
+  }
+
+  @override
+  void didUpdateWidget(covariant HomeUpcomingPayments oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.pagamentos != oldWidget.pagamentos) {
+      setState(() {
+        _listaAtual = widget.pagamentos ?? [];
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // Se a lista for nula ou vazia, não exibe nada
-    final listaSegura = pagamentos ?? [];
-    if (listaSegura.isEmpty) return const SizedBox.shrink();
+    if (_listaAtual.isEmpty) return const SizedBox.shrink();
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25),
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              const Text(
-                "Próximos pagamentos",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              GestureDetector(
-                onTap: onVerMaisPressed,
-                child: const Text(
-                  "Ver mais",
-                  style: TextStyle(color: Colors.grey, fontSize: 12),
-                ),
-              ),
-            ],
-          ),
           const SizedBox(height: 15),
-          // Aqui está a lista dinâmica
           Column(
-            children: listaSegura.map((pagamento) {
+            children: _listaAtual.map((pagamento) {
               return GestureDetector(
-                onTap: () => onPagamentoPressed(pagamento['title']),
+                onTap: () => widget.onPagamentoPressed(pagamento['title']),
                 child: Container(
                   margin: const EdgeInsets.only(bottom: 12),
                   padding: const EdgeInsets.all(16),

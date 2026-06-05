@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:invezzte/domain/notifiers/user_notifier.dart';
+import 'package:invezzte/core/injecao.dart';
+import 'package:invezzte/domain/repositories/user_repository.dart';
 import 'package:invezzte/feature/widgets/FormButton.dart';
 import 'package:invezzte/feature/widgets/HeaderForm.dart';
 import 'package:invezzte/feature/widgets/InputField.dart';
@@ -9,92 +10,91 @@ import 'package:invezzte/feature/widgets/SectionTitle.dart';
 import 'package:invezzte/domain/suporte/Validacoes.dart';
 import 'package:invezzte/domain/enums.dart'; 
 
-class RegisterUser extends StatefulWidget {
-  const RegisterUser({super.key});
+class ProfileUser extends StatefulWidget {
+  const ProfileUser({super.key});
 
   @override
-  State<RegisterUser> createState() => _RegisterUserState();
+  State<ProfileUser> createState() => _ProfileUserState();
 }
 
-class _RegisterUserState extends State<RegisterUser> {
+class _ProfileUserState extends State<ProfileUser> {
   final _formKey = GlobalKey<FormState>();
 
   final _nomeController = TextEditingController();
   final _emailController = TextEditingController();
-  final _salarioController = TextEditingController();
-  final _frequenciaController = TextEditingController();
-  final _dataRecebimentoController = TextEditingController();
-  final _senhaController = TextEditingController();
-  final _confirmaSenhaController = TextEditingController();
-
+  
   Gender? _selectedGender; 
 
-  bool _isLoading = false; 
+  bool _isLoading = false;
+
   String _traduzirGenero(Gender genero) {
-    switch (genero) {
-      case Gender.male:
-        return 'Masculino';
-      case Gender.female:
-        return 'Feminino';
-      case Gender.other:
-        return 'Outro';
-      case Gender.preferNotToSay:
-        return 'Prefiro não informar';
-      default:
-        return genero.name;
-    }
+  switch (genero) {
+    case Gender.male:
+      return 'Masculino';
+    case Gender.female:
+      return 'Feminino';
+    case Gender.other:
+      return 'Outro';
+    case Gender.preferNotToSay: // Verifique se é assim que está no seu enums.dart
+      return 'Prefiro não informar';
+    default:
+      return genero.name;
+  }
+}
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final user = context.read<UserProvider>().currentUser;
+      if (user != null) {
+        _nomeController.text = user.name ?? "";
+        _emailController.text = user.email ?? "";
+        
+        setState(() {
+          _selectedGender = user.gender; 
+        });
+      }
+    });
   }
 
   @override
   void dispose() {
     _nomeController.dispose();
     _emailController.dispose();
-    _salarioController.dispose();
-    _frequenciaController.dispose();
-    _dataRecebimentoController.dispose();
-    _senhaController.dispose();
-    _confirmaSenhaController.dispose();
     super.dispose();
   }
 
-  Future<void> _salvarCadastro() async {
+  Future<void> _salvarPerfil() async {
     if (_formKey.currentState!.validate()) {
       setState(() => _isLoading = true);
 
-      final userProvider = Provider.of<UserProvider>(context, listen: false);
-    
-      final sucesso = await userProvider.cadastrar(
-        _nomeController.text,
-        _emailController.text,
-        _senhaController.text,
-      );
+      final userProvider = context.read<UserProvider>();
+      final userAtual = userProvider.currentUser;
+
+      if (userAtual != null) {
+        final userAtualizado = userAtual.copyWith(
+          name: _nomeController.text.trim(),
+          email: _emailController.text.trim(),
+          gender: _selectedGender, 
+        );
+
+        await sl<UserRepository>().update(userAtualizado);
+
+        userProvider.atualizarUsuarioEmMemoria(userAtualizado);
+      }
 
       if (!mounted) return;
       setState(() => _isLoading = false);
 
-      if (sucesso) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Cadastro realizado com sucesso!'),
-            backgroundColor: Colors.green,
-            duration: Duration(seconds: 2),
-          ),
-        );
-
-        await Future.delayed(const Duration(seconds: 1));
-
-        if (mounted) {
-          context.go('/login'); 
-        }
-
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Erro ao criar conta. Tente novamente.'),
-            backgroundColor: Colors.redAccent,
-          ),
-        );
-      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Perfil atualizado com sucesso!'),
+          backgroundColor: Colors.green,
+        ),
+      );
+      
+      Navigator.of(context).pop();
     }
   }
 
@@ -117,10 +117,10 @@ class _RegisterUserState extends State<RegisterUser> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Headerform(title: "Faça seu Cadastro!"),
+              const Headerform(title: "Seu Perfil"),
               const SizedBox(height: 10),
               const Text(
-                "Cadastre-se em nosso app para acompanhar de perto suas finanças.",
+                "Consulte ou altere as suas informações cadastrais.",
                 style: TextStyle(color: Colors.grey, fontSize: 14),
               ),
               const SizedBox(height: 30),
@@ -162,7 +162,7 @@ class _RegisterUserState extends State<RegisterUser> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  DropdownButtonFormField<Gender>(
+                  DropdownButtonFormField<Gender>( 
                     value: _selectedGender,
                     icon: const Icon(Icons.arrow_drop_down, color: Colors.grey),
                     decoration: InputDecoration(
@@ -183,10 +183,13 @@ class _RegisterUserState extends State<RegisterUser> {
                       filled: true,
                       fillColor: Colors.grey[100],
                     ),
+
                     items: Gender.values.map((Gender generoItem) {
                       return DropdownMenuItem<Gender>(
                         value: generoItem,
-                        child: Text(_traduzirGenero(generoItem)),
+                        child: Text(
+                          _traduzirGenero(generoItem), 
+                        ),
                       );
                     }).toList(),
                     onChanged: (novoGenero) {
@@ -194,50 +197,18 @@ class _RegisterUserState extends State<RegisterUser> {
                         _selectedGender = novoGenero;
                       });
                     },
-                    validator: (val) {
-                      if (val == null) return "O gênero é obrigatório";
-                      return null;
-                    },
                   ),
                 ],
               ),
 
-              const SizedBox(height: 30),
-
-              const Align(
-                alignment: Alignment.centerLeft,
-                child: SectionTitle(title: "Segurança"),
-              ),
-              const SizedBox(height: 20),
-
-              InputField(
-                label: "Digite sua senha",
-                hintText: "Mínimo 8 caracteres (1 maiúscula, 1 número)",
-                prefixIcon: Icons.lock_outline,
-                controller: _senhaController,
-                obscureText: true,
-                validator: Validacoes.senha,
-              ),
-              const SizedBox(height: 15),
-
-              InputField(
-                label: "Confirme sua senha",
-                hintText: "Precisa ser igual",
-                prefixIcon: Icons.lock_outline,
-                controller: _confirmaSenhaController,
-                obscureText: true,
-                validator: (val) =>
-                    Validacoes.confirmarSenha(_senhaController.text)(val),
-              ),
-
-              const SizedBox(height: 40),
+              const SizedBox(height: 100),
 
               IgnorePointer(
                 ignoring: _isLoading,
                 child: Opacity(
                   opacity: _isLoading ? 0.5 : 1.0,
                   child: FormButton(
-                    onSave: _salvarCadastro,
+                    onSave: _salvarPerfil, 
                     onCancel: () => Navigator.of(context).pop(),
                   ),
                 ),

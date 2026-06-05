@@ -32,8 +32,7 @@ class Transaction {
   }
 
   Map<String, dynamic> toMap() {
-    return {
-      'id_transaction': id,
+    final map = {
       'user_id': userId,
       'category_id': categoryId,
       'title': title,
@@ -41,6 +40,12 @@ class Transaction {
       'date': date.toIso8601String(),
       'type': type.name,
     };
+    
+    if (id != 0) {
+      map['id_transaction'] = id; 
+    }
+    
+    return map;
   }
 
   Transaction copyWith({
@@ -51,8 +56,6 @@ class Transaction {
     double? amount,
     DateTime? date,
     TransactionType? type,
-    TransactionTag? tag,
-    TransactionStatus? status,
   }) {
     return Transaction(
       id: id ?? this.id,
