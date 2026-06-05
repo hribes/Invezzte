@@ -176,6 +176,7 @@ class _CategoryCreateState extends State<CategoryCreate> {
 
     return Scaffold(
       backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,

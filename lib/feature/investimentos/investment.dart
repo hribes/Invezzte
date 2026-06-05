@@ -2,10 +2,8 @@ import 'package:flutter/material.dart' hide SearchBar;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:provider/provider.dart';
-
 import 'package:invezzte/feature/widgets/HeaderScreens.dart';
 import 'package:invezzte/feature/widgets/NavBar.dart';
-import 'package:invezzte/feature/investimentos/widgets/buildCryptocurrencies.dart';
 import 'package:invezzte/feature/investimentos/widgets/cryptoCard.dart';
 import 'package:invezzte/feature/investimentos/widgets/graphic.dart';
 
@@ -131,7 +129,7 @@ class _InvestmentState extends State<Investment> {
                           style: const TextStyle(
                             fontSize: 35,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF434343),
+                            color: Color.fromARGB(255, 0, 0, 0),
                           ),
                         ),
                       ),

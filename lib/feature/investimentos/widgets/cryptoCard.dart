@@ -18,7 +18,7 @@ class CryptoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(25.0),
+      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -45,13 +45,12 @@ class CryptoCard extends StatelessWidget {
                         decoration: const BoxDecoration(
                           color: Color(
                             0xFF360B7A,
-                          ), // Você também pode mudar essa cor se quiser
+                          ), 
                           shape: BoxShape.circle,
                         ),
-                        // 👇 É SÓ MUDAR AQUI 👇
                         child: const Icon(
                           Icons
-                              .trending_up, // Substituído Icons.currency_bitcoin por Icons.trending_up
+                              .trending_up, 
                           color: Color(0xffffffff),
                         ),
                       ),

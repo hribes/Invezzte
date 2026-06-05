@@ -25,27 +25,39 @@ class _HomeInvezzteState extends State<HomeInvezzte> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-    if (mounted) {
-      context.read<SaldoNotifier>().carregarSaldo();
-      context.read<HistoricoNotifier>().inicializarHistorico();
-    }
-    }); 
+      if (mounted) {
+        context.read<SaldoNotifier>().carregarSaldo();
+        context.read<HistoricoNotifier>().inicializarHistorico();
+      }
+    });
   }
 
   IconData _getIconData(String iconName) {
     switch (iconName) {
-      case 'home': return Icons.home;
-      case 'directions_car': return Icons.directions_car;
-      case 'shopping_cart': return Icons.shopping_cart;
-      case 'restaurant': return Icons.restaurant;
-      case 'work': return Icons.work;
-      case 'account_balance_wallet': return Icons.account_balance_wallet;
-      case 'fitness_center': return Icons.fitness_center;
-      case 'local_hospital': return Icons.local_hospital;
-      case 'plane': return Icons.flight;
-      case 'school': return Icons.school;
-      case 'entertainment': return Icons.live_tv;
-      default: return Icons.help_outline; 
+      case 'home':
+        return Icons.home;
+      case 'directions_car':
+        return Icons.directions_car;
+      case 'shopping_cart':
+        return Icons.shopping_cart;
+      case 'restaurant':
+        return Icons.restaurant;
+      case 'work':
+        return Icons.work;
+      case 'account_balance_wallet':
+        return Icons.account_balance_wallet;
+      case 'fitness_center':
+        return Icons.fitness_center;
+      case 'local_hospital':
+        return Icons.local_hospital;
+      case 'plane':
+        return Icons.flight;
+      case 'school':
+        return Icons.school;
+      case 'entertainment':
+        return Icons.live_tv;
+      default:
+        return Icons.help_outline;
     }
   }
 
@@ -97,66 +109,69 @@ class _HomeInvezzteState extends State<HomeInvezzte> {
 
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24),
-                child: Text("Movimentações recentes", 
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                child: Text(
+                  "Movimentações recentes",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
               ),
               const SizedBox(height: 15),
-                  Consumer<HistoricoNotifier>(
-                  builder: (context, historico, child) {
-                    final ultimasMovimentacoes = List.of(historico.transacoes)
-                      ..sort((a, b) {
-                        final dataCompare = b.date.compareTo(a.date);
+              Consumer<HistoricoNotifier>(
+                builder: (context, historico, child) {
+                  final ultimasMovimentacoes = List.of(historico.transacoes)
+                    ..sort((a, b) {
+                      final dataCompare = b.date.compareTo(a.date);
 
-                        if (dataCompare != 0) {
-                          return dataCompare;
-                        }
+                      if (dataCompare != 0) {
+                        return dataCompare;
+                      }
 
-                        return b.id.compareTo(a.id);
-                      });
+                      return b.id.compareTo(a.id);
+                    });
 
-                    final movimentacoesExibidas =
-                        ultimasMovimentacoes.take(5).toList();
+                  final movimentacoesExibidas = ultimasMovimentacoes
+                      .take(5)
+                      .toList();
 
-                    if (movimentacoesExibidas.isEmpty) {
-                      return const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 24),
-                        child: Text(
-                          "Realize alguma movimentação para visualizar",
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontStyle: FontStyle.italic,
-                          ),
+                  if (movimentacoesExibidas.isEmpty) {
+                    return const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 24),
+                      child: Text(
+                        "Realize alguma movimentação para visualizar",
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontStyle: FontStyle.italic,
                         ),
-                      );
-                    }
-
-                    final lista = movimentacoesExibidas.map((t) {
-                      final cat = categoriaNotifier.categorias.firstWhere(
-                        (c) => c.id == t.categoryId,
-                        orElse: () => const Category(
-                          id: 0,
-                          userId: 0,
-                          name: 'Outros',
-                          iconName: 'help_outline',
-                        ),
-                      );
-
-                      return <String, dynamic>{
-                        'title': t.title,
-                        'date':
-                            "${t.date.day.toString().padLeft(2, '0')}/${t.date.month.toString().padLeft(2, '0')}/${t.date.year}",
-                        'amount': t.amount,
-                        'icon': _getIconData(cat.iconName),
-                      };
-                    }).toList();
-
-                    return HomeUpcomingPayments(
-                      pagamentos: lista,
-                      onVerMaisPressed: () => context.push('/history'),
-                      onPagamentoPressed: (String titulo) {},
+                      ),
                     );
-                  },
-                ),
+                  }
+
+                  final lista = movimentacoesExibidas.map((t) {
+                    final cat = categoriaNotifier.categorias.firstWhere(
+                      (c) => c.id == t.categoryId,
+                      orElse: () => const Category(
+                        id: 0,
+                        userId: 0,
+                        name: 'Outros',
+                        iconName: 'help_outline',
+                      ),
+                    );
+
+                    return <String, dynamic>{
+                      'title': t.title,
+                      'date':
+                          "${t.date.day.toString().padLeft(2, '0')}/${t.date.month.toString().padLeft(2, '0')}/${t.date.year}",
+                      'amount': t.amount,
+                      'icon': _getIconData(cat.iconName),
+                    };
+                  }).toList();
+
+                  return HomeUpcomingPayments(
+                    pagamentos: lista,
+                    onVerMaisPressed: () => context.push('/history'),
+                    onPagamentoPressed: (String titulo) {},
+                  );
+                },
+              ),
 
               const SizedBox(height: 20),
             ],
