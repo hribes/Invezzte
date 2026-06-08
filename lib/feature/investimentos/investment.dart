@@ -6,6 +6,7 @@ import 'package:invezzte/feature/widgets/HeaderScreens.dart';
 import 'package:invezzte/feature/widgets/NavBar.dart';
 import 'package:invezzte/feature/investimentos/widgets/cryptoCard.dart';
 import 'package:invezzte/feature/investimentos/widgets/graphic.dart';
+import 'package:invezzte/feature/investimentos/widgets/asset_graphic.dart';
 
 // Importações dos Notifiers
 import 'package:invezzte/domain/notifiers/user_notifier.dart';
@@ -203,15 +204,21 @@ class _InvestmentState extends State<Investment> {
               ),
             ),
 
-            ...carteiraOficial.map((ativo) {
-              return Align(
-                child: CryptoCard(
-                  nameCrypto: ativo['name'],
-                  valueCrypto: ativo['quantidade'],
-                  valueCurrency: ativo['totalValue'],
-                  onTap: () {},
+            ...carteiraOficial.expand((ativo) {
+              return [
+                Align(
+                  child: CryptoCard(
+                    nameCrypto: ativo['name'],
+                    valueCrypto: ativo['quantidade'],
+                    valueCurrency: ativo['totalValue'],
+                    onTap: () {},
+                  ),
                 ),
-              );
+                AssetGraphic(
+                  assetId: ativo['assetId'],
+                  assetName: ativo['name'],
+                ),
+              ];
             }),
 
             const SizedBox(height: 20),
