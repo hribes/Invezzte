@@ -16,9 +16,12 @@ class AssetGraphic extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<InvestimentoNotifier>(
-      builder: (context, notifier, child) {
-        final spots = _gerarSpotsAtivo(notifier);
+    return Selector<InvestimentoNotifier, List<dynamic>>(
+      selector: (context, notifier) => [
+        notifier.obterOperacoesDoAtivo(assetId),
+      ],
+      builder: (context, operacoes, child) {
+        final spots = _gerarSpotsAtivo(operacoes[0]);
 
         if (spots.isEmpty) {
           return const SizedBox(height: 150);
@@ -118,9 +121,7 @@ class AssetGraphic extends StatelessWidget {
     );
   }
 
-  List<FlSpot> _gerarSpotsAtivo(InvestimentoNotifier notifier) {
-    final operacoes = notifier.obterOperacoesDoAtivo(assetId);
-
+  List<FlSpot> _gerarSpotsAtivo(List<dynamic> operacoes) {
     if (operacoes.isEmpty) return [];
 
     operacoes.sort((a, b) => a.date.compareTo(b.date));
