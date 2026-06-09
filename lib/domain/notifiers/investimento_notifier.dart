@@ -70,8 +70,15 @@ class InvestimentoNotifier extends ChangeNotifier {
           'totalValue': 0.0,
         };
       }
-      agrupado[op.assetId]!['quantidade_raw'] += op.quantity;
-      agrupado[op.assetId]!['totalValue'] += op.totalAmount;
+      
+      // Se for compra, soma. Se for venda, subtrai
+      if (op.operationType == OperationType.buy) {
+        agrupado[op.assetId]!['quantidade_raw'] += op.quantity;
+        agrupado[op.assetId]!['totalValue'] += op.totalAmount;
+      } else if (op.operationType == OperationType.sell) {
+        agrupado[op.assetId]!['quantidade_raw'] -= op.quantity;
+        agrupado[op.assetId]!['totalValue'] -= op.totalAmount;
+      }
     }
 
     return agrupado.values.map((item) {

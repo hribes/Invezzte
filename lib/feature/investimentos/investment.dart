@@ -18,6 +18,7 @@ import 'package:invezzte/domain/transaction.dart';
 import 'package:invezzte/domain/enums.dart';
 import 'package:invezzte/core/injecao.dart';
 import 'package:invezzte/domain/repositories/transaction_repository.dart';
+import 'package:invezzte/domain/repositories/category_repository.dart';
 
 class Investment extends StatefulWidget {
   const Investment({super.key});
@@ -151,17 +152,23 @@ class _InvestmentState extends State<Investment> {
       await userProvider.atualizarSaldo(novoSaldo);
 
       // Registrar como transação de recebimento
-      final transactionRepo = sl<TransactionRepository>();
-      final novaTransacao = Transaction(
-        id: 0,
-        userId: userId,
-        categoryId: 1, // Categoria padrão para recebimentos
-        title: 'Venda de Ações',
-        amount: valorVenda,
-        date: DateTime.now(),
-        type: TransactionType.income,
-      );
-      await transactionRepo.insert(novaTransacao);
+      // Buscar a primeira categoria do usuário para evitar erro de Foreign Key
+      final categoryRepo = sl<CategoryRepository>();
+      final categorias = await categoryRepo.getByUserId(userId);
+      
+      if (categorias.isNotEmpty) {
+        final transactionRepo = sl<TransactionRepository>();
+        final novaTransacao = Transaction(
+          id: 0,
+          userId: userId,
+          categoryId: categorias.first.id, // Usa a primeira categoria do usuário
+          title: 'Venda de Ações',
+          amount: valorVenda,
+          date: DateTime.now(),
+          type: TransactionType.income,
+        );
+        await transactionRepo.insert(novaTransacao);
+      }
 
       // Atualizar gráfico
       context.read<PatrimonioHistoryNotifier>().adicionarRegistro(
