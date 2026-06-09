@@ -11,6 +11,7 @@ import 'package:invezzte/domain/notifiers/categoria_notifier.dart';
 import 'package:invezzte/domain/notifiers/historico_notifier.dart';
 import 'package:invezzte/domain/notifiers/saldo_notifier.dart';
 import 'package:invezzte/domain/notifiers/investimento_notifier.dart';
+import 'package:invezzte/domain/notifiers/patrimonio_history_notifier.dart';
 import 'package:invezzte/domain/repositories/category_repository.dart';
 
 final sl = GetIt.instance;
@@ -29,4 +30,5 @@ Future<void> setupInjecao() async {
   sl.registerLazySingleton<HistoricoNotifier>(() => HistoricoNotifier());
   sl.registerLazySingleton<SaldoNotifier>(() => SaldoNotifier());
   sl.registerLazySingleton<InvestimentoNotifier>(() => InvestimentoNotifier());
+  sl.registerLazySingleton<PatrimonioHistoryNotifier>(() => PatrimonioHistoryNotifier());
 }

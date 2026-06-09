@@ -10,6 +10,7 @@ import 'package:invezzte/feature/investimentos/widgets/graphic.dart';
 // Importações dos Notifiers
 import 'package:invezzte/domain/notifiers/user_notifier.dart';
 import 'package:invezzte/domain/notifiers/investimento_notifier.dart';
+import 'package:invezzte/domain/notifiers/patrimonio_history_notifier.dart';
 
 class Investment extends StatefulWidget {
   const Investment({super.key});
@@ -32,6 +33,9 @@ class _InvestmentState extends State<Investment> {
       final userId = context.read<UserProvider>().currentUser?.id;
       if (userId != null) {
         context.read<InvestimentoNotifier>().carregarDadosDoBanco(userId);
+        // Inicializar o gráfico com o patrimônio atual
+        final patrimonioInicial = context.read<UserProvider>().currentUser?.patrimony ?? 0.0;
+        context.read<PatrimonioHistoryNotifier>().adicionarRegistro(patrimonioInicial);
       }
     });
   }
@@ -70,7 +74,12 @@ class _InvestmentState extends State<Investment> {
         );
 
         final patrimonioAtual = userProvider.currentUser?.patrimony ?? 0.0;
-        await userProvider.atualizarPatrimonio(patrimonioAtual + valorInvestido);
+        final novoPatrimonio = patrimonioAtual + valorInvestido;
+        
+        await userProvider.atualizarPatrimonio(novoPatrimonio);
+        
+        // Adicionar ao histórico após atualizar
+        context.read<PatrimonioHistoryNotifier>().adicionarRegistro(novoPatrimonio);
 
         quantidadeController.clear();
       } else {

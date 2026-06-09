@@ -17,6 +17,7 @@ import 'package:invezzte/feature/configuracao/Category.dart';
 import 'package:invezzte/domain/notifiers/user_notifier.dart';
 import 'package:invezzte/domain/notifiers/historico_notifier.dart';
 import 'package:invezzte/domain/notifiers/categoria_notifier.dart';
+import 'package:invezzte/domain/notifiers/patrimonio_history_notifier.dart';
 import 'package:invezzte/domain/suporte/database_helper.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:invezzte/domain/notifiers/investimento_notifier.dart';
@@ -97,6 +98,7 @@ class InvezzteApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => sl<HistoricoNotifier>()),
         ChangeNotifierProvider(create: (_) => sl<CategoriaNotifier>()),
         ChangeNotifierProvider(create: (_) => sl<InvestimentoNotifier>()),
+        ChangeNotifierProvider(create: (_) => sl<PatrimonioHistoryNotifier>()),
       ],
       child: MaterialApp.router(
         title: 'Invezzte',

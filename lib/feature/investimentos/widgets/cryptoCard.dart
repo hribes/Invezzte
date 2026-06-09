@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:invezzte/feature/investimentos/widgets/graphic.dart';
 
 class CryptoCard extends StatelessWidget {
   final String nameCrypto;
@@ -31,69 +30,61 @@ class CryptoCard extends StatelessWidget {
             ),
           ],
         ),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsetsGeometry.all(10.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: Padding(
+          padding: const EdgeInsetsGeometry.all(10.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
                 children: [
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(5.0),
-                        decoration: const BoxDecoration(
-                          color: Color(
-                            0xFF360B7A,
-                          ), 
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons
-                              .trending_up, 
-                          color: Color(0xffffffff),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsetsGeometry.all(10.0),
-                        child: Column(
-                          children: [
-                            Text(
-                              nameCrypto,
-                              style: const TextStyle(
-                                color: Color.fromARGB(255, 0, 0, 0),
-                                fontSize: 18,
-                              ),
-                            ),
-                            Text(
-                              valueCrypto,
-                              style: const TextStyle(
-                                color: Color(0xFF434343),
-                                fontSize: 10,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                  Container(
+                    padding: const EdgeInsets.all(5.0),
+                    decoration: const BoxDecoration(
+                      color: Color(
+                        0xFF360B7A,
+                      ), 
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons
+                          .trending_up, 
+                      color: Color(0xffffffff),
+                    ),
                   ),
-
-                  Text(
-                    'R\$${valueCurrency.toStringAsFixed(2)}',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 0, 0, 0),
-                      fontSize: 18,
+                  Padding(
+                    padding: const EdgeInsetsGeometry.all(10.0),
+                    child: Column(
+                      children: [
+                        Text(
+                          nameCrypto,
+                          style: const TextStyle(
+                            color: Color.fromARGB(255, 0, 0, 0),
+                            fontSize: 18,
+                          ),
+                        ),
+                        Text(
+                          valueCrypto,
+                          style: const TextStyle(
+                            color: Color(0xFF434343),
+                            fontSize: 10,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
-            ),
-            const Padding(
-              padding: EdgeInsetsGeometry.all(15),
-              child: Graphic(),
-            ),
-          ],
+
+              Text(
+                'R\$${valueCurrency.toStringAsFixed(2)}',
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 0, 0, 0),
+                  fontSize: 18,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
