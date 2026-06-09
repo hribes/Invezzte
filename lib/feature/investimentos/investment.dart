@@ -6,6 +6,7 @@ import 'package:invezzte/feature/widgets/HeaderScreens.dart';
 import 'package:invezzte/feature/widgets/NavBar.dart';
 import 'package:invezzte/feature/investimentos/widgets/cryptoCard.dart';
 import 'package:invezzte/feature/investimentos/widgets/graphic.dart';
+import 'package:invezzte/feature/investimentos/widgets/sell_modal.dart';
 
 // Importações dos Notifiers
 import 'package:invezzte/domain/notifiers/user_notifier.dart';
@@ -34,8 +35,11 @@ class _InvestmentState extends State<Investment> {
       if (userId != null) {
         context.read<InvestimentoNotifier>().carregarDadosDoBanco(userId);
         // Inicializar o gráfico com o patrimônio atual
-        final patrimonioInicial = context.read<UserProvider>().currentUser?.patrimony ?? 0.0;
-        context.read<PatrimonioHistoryNotifier>().adicionarRegistro(patrimonioInicial);
+        final patrimonioInicial =
+            context.read<UserProvider>().currentUser?.patrimony ?? 0.0;
+        context.read<PatrimonioHistoryNotifier>().adicionarRegistro(
+          patrimonioInicial,
+        );
       }
     });
   }
@@ -68,18 +72,20 @@ class _InvestmentState extends State<Investment> {
 
         await context.read<InvestimentoNotifier>().adicionarOperacao(
           userId,
-          tickerSelecionado, 
-          valorInvestido, 
+          tickerSelecionado,
+          valorInvestido,
           quantidadeNova,
         );
 
         final patrimonioAtual = userProvider.currentUser?.patrimony ?? 0.0;
         final novoPatrimonio = patrimonioAtual + valorInvestido;
-        
+
         await userProvider.atualizarPatrimonio(novoPatrimonio);
-        
+
         // Adicionar ao histórico após atualizar
-        context.read<PatrimonioHistoryNotifier>().adicionarRegistro(novoPatrimonio);
+        context.read<PatrimonioHistoryNotifier>().adicionarRegistro(
+          novoPatrimonio,
+        );
 
         quantidadeController.clear();
       } else {
@@ -94,10 +100,67 @@ class _InvestmentState extends State<Investment> {
     }
   }
 
-  @override
+  Future<void> _abrirModalVenda(
+    String ticker,
+    double quantidadeDisponivel,
+    int assetId,
+  ) async {
+    showDialog(
+      context: context,
+      builder: (context) => SellModal(
+        ticker: ticker,
+        quantidadeDisponivel: quantidadeDisponivel,
+        onConfirm: (quantidadeVenda, valorVenda) async {
+          await _processarVenda(assetId, quantidadeVenda, valorVenda);
+        },
+      ),
+    );
+  }
+
+  Future<void> _processarVenda(
+    int assetId,
+    double quantidadeVenda,
+    double valorVenda,
+  ) async {
+    try {
+      final userProvider = context.read<UserProvider>();
+      final userId = userProvider.currentUser!.id;
+
+      await context.read<InvestimentoNotifier>().venderOperacao(
+        userId,
+        assetId,
+        quantidadeVenda,
+        valorVenda,
+      );
+
+      final patrimonioAtual = userProvider.currentUser?.patrimony ?? 0.0;
+      final novoPatrimonio = patrimonioAtual + valorVenda;
+
+      await userProvider.atualizarPatrimonio(novoPatrimonio);
+
+      context.read<PatrimonioHistoryNotifier>().adicionarRegistro(
+        novoPatrimonio,
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Ações vendidas com sucesso!'),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Erro ao vender: $e')));
+    }
+  }
+
   Widget build(BuildContext context) {
-    final patrimonioOficial = context.watch<UserProvider>().currentUser?.patrimony ?? 0.0;
-    final carteiraOficial = context.watch<InvestimentoNotifier>().carteiraAgrupada;
+    final patrimonioOficial =
+        context.watch<UserProvider>().currentUser?.patrimony ?? 0.0;
+    final carteiraOficial = context
+        .watch<InvestimentoNotifier>()
+        .carteiraAgrupada;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -155,7 +218,10 @@ class _InvestmentState extends State<Investment> {
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 15,
+                  vertical: 10,
+                ),
                 decoration: BoxDecoration(
                   color: Colors.grey[100],
                   borderRadius: BorderRadius.circular(15),
@@ -219,6 +285,11 @@ class _InvestmentState extends State<Investment> {
                   valueCrypto: ativo['quantidade'],
                   valueCurrency: ativo['totalValue'],
                   onTap: () {},
+                  onSell: () => _abrirModalVenda(
+                    ativo['name'],
+                    ativo['quantidade_raw'],
+                    ativo['assetId'],
+                  ),
                 ),
               );
             }),

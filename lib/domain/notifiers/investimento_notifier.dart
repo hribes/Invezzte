@@ -85,7 +85,25 @@ class InvestimentoNotifier extends ChangeNotifier {
         'name': ativoOriginal.ticker,
         'quantidade': '${item['quantidade_raw'].toInt()} cotas',
         'totalValue': item['totalValue'],
+        'assetId': item['assetId'],
+        'quantidade_raw': item['quantidade_raw'],
       };
     }).toList();
+  }
+
+  Future<void> venderOperacao(int userId, int assetId, double quantidadeVenda, double valorVenda) async {
+    final opRepo = sl<InvestmentOperationRepository>();
+    
+    final novaOperacao = InvestmentOperation(
+      id: 0,
+      assetId: assetId,
+      operationType: OperationType.sell,
+      totalAmount: valorVenda,
+      quantity: quantidadeVenda,
+      date: DateTime.now(),
+    );
+
+    await opRepo.insert(novaOperacao);
+    await carregarDadosDoBanco(userId); 
   }
 }
