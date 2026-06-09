@@ -13,6 +13,12 @@ import 'package:invezzte/domain/notifiers/user_notifier.dart';
 import 'package:invezzte/domain/notifiers/investimento_notifier.dart';
 import 'package:invezzte/domain/notifiers/patrimonio_history_notifier.dart';
 
+// Importações das Entidades
+import 'package:invezzte/domain/transaction.dart';
+import 'package:invezzte/domain/enums.dart';
+import 'package:invezzte/core/injecao.dart';
+import 'package:invezzte/domain/repositories/transaction_repository.dart';
+
 class Investment extends StatefulWidget {
   const Investment({super.key});
 
@@ -126,6 +132,7 @@ class _InvestmentState extends State<Investment> {
       final userProvider = context.read<UserProvider>();
       final userId = userProvider.currentUser!.id;
 
+      // Registrar a operação de venda de ações
       await context.read<InvestimentoNotifier>().venderOperacao(
         userId,
         assetId,
@@ -133,11 +140,30 @@ class _InvestmentState extends State<Investment> {
         valorVenda,
       );
 
+      // Atualizar patrimônio
       final patrimonioAtual = userProvider.currentUser?.patrimony ?? 0.0;
       final novoPatrimonio = patrimonioAtual + valorVenda;
-
       await userProvider.atualizarPatrimonio(novoPatrimonio);
 
+      // Adicionar saldo ao usuário
+      final saldoAtual = userProvider.currentUser?.balance ?? 0.0;
+      final novoSaldo = saldoAtual + valorVenda;
+      await userProvider.atualizarSaldo(novoSaldo);
+
+      // Registrar como transação de recebimento
+      final transactionRepo = sl<TransactionRepository>();
+      final novaTransacao = Transaction(
+        id: 0,
+        userId: userId,
+        categoryId: 1, // Categoria padrão para recebimentos
+        title: 'Venda de Ações',
+        amount: valorVenda,
+        date: DateTime.now(),
+        type: TransactionType.income,
+      );
+      await transactionRepo.insert(novaTransacao);
+
+      // Atualizar gráfico
       context.read<PatrimonioHistoryNotifier>().adicionarRegistro(
         novoPatrimonio,
       );
@@ -149,9 +175,9 @@ class _InvestmentState extends State<Investment> {
         ),
       );
     } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Erro ao vender: $e')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erro ao vender: $e')),
+      );
     }
   }
 
