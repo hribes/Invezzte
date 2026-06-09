@@ -59,20 +59,6 @@ class InvestimentoNotifier extends ChangeNotifier {
     await carregarDadosDoBanco(userId); 
   }
 
-  List<InvestmentOperation> get operacoes => _operacoes;
-
-  List<InvestmentOperation> obterOperacoesDoAtivo(int assetId) {
-    return _operacoes.where((op) => op.assetId == assetId).toList();
-  }
-
-  String obterTickerDoAtivo(int assetId) {
-    try {
-      return _ativos.firstWhere((a) => a.id == assetId).ticker;
-    } catch (e) {
-      return 'Desconhecido';
-    }
-  }
-
   List<Map<String, dynamic>> get carteiraAgrupada {
     Map<int, Map<String, dynamic>> agrupado = {};
 
@@ -96,7 +82,6 @@ class InvestimentoNotifier extends ChangeNotifier {
       );
 
       return {
-        'assetId': item['assetId'],
         'name': ativoOriginal.ticker,
         'quantidade': '${item['quantidade_raw'].toInt()} cotas',
         'totalValue': item['totalValue'],

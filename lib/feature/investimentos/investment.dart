@@ -64,13 +64,15 @@ class _InvestmentState extends State<Investment> {
 
         await context.read<InvestimentoNotifier>().adicionarOperacao(
           userId,
-          tickerSelecionado, 
-          valorInvestido, 
+          tickerSelecionado,
+          valorInvestido,
           quantidadeNova,
         );
 
         final patrimonioAtual = userProvider.currentUser?.patrimony ?? 0.0;
-        await userProvider.atualizarPatrimonio(patrimonioAtual + valorInvestido);
+        await userProvider.atualizarPatrimonio(
+          patrimonioAtual + valorInvestido,
+        );
 
         quantidadeController.clear();
       } else {
@@ -87,8 +89,11 @@ class _InvestmentState extends State<Investment> {
 
   @override
   Widget build(BuildContext context) {
-    final patrimonioOficial = context.watch<UserProvider>().currentUser?.patrimony ?? 0.0;
-    final carteiraOficial = context.watch<InvestimentoNotifier>().carteiraAgrupada;
+    final patrimonioOficial =
+        context.watch<UserProvider>().currentUser?.patrimony ?? 0.0;
+    final carteiraOficial = context
+        .watch<InvestimentoNotifier>()
+        .carteiraAgrupada;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -146,7 +151,10 @@ class _InvestmentState extends State<Investment> {
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 15,
+                  vertical: 10,
+                ),
                 decoration: BoxDecoration(
                   color: Colors.grey[100],
                   borderRadius: BorderRadius.circular(15),
@@ -212,6 +220,10 @@ class _InvestmentState extends State<Investment> {
                     valueCurrency: ativo['totalValue'],
                     onTap: () {},
                   ),
+                ),
+                AssetGraphic(
+                  assetId: ativo['assetId'],
+                  assetName: ativo['name'],
                 ),
               ];
             }),
